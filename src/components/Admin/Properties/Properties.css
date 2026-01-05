@@ -1,0 +1,98 @@
+.properties-layout {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.properties-form-wrapper {
+  flex: 1;
+  background: #f4f5f7;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow-y: auto;
+  padding: 40px 0 60px;
+}
+
+.properties-form-card {
+  width: 480px;
+  background: #fff;
+  padding: 28px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+
+.properties-title {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.properties-form-column {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-row label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #444;
+}
+
+.properties-input,
+.properties-select,
+.properties-textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.properties-input:focus,
+.properties-select:focus,
+.properties-textarea:focus {
+  border-color: #0d1b5e;
+  box-shadow: 0 0 0 3px rgba(13, 27, 94, 0.08);
+}
+
+.properties-textarea {
+  height: 90px;
+  resize: vertical;
+}
+
+/* ✅ AREA + UNIT — FINAL FIX */
+.property-area-row {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+
+.property-area-row .properties-input {
+  flex: 3;
+}
+
+.property-area-unit {
+  flex: 1;
+  min-width: 110px;
+}
+
+.properties-button-wrap {
+  margin-top: 14px;
+}
+
+.sidebar-item.active {
+  background: #1d4ed8 !important;
+  color: #fff !important;
+  font-weight: 600;
+}

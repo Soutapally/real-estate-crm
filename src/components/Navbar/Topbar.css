@@ -1,0 +1,114 @@
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background: linear-gradient(90deg, #0d1728, #111c34);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px;
+  z-index: 1000;
+}
+
+/* =======================
+   LEFT
+======================= */
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.topbar-title {
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+/* =======================
+   MENU BUTTON
+======================= */
+
+.menu-btn {
+  display: none;              /* Hidden on desktop */
+  font-size: 22px;
+  background: none;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+/* =======================
+   RIGHT
+======================= */
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.topbar-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #ffffff;
+}
+
+.topbar-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+
+.topbar-info {
+  font-size: 12px;
+}
+
+.topbar-name {
+  font-weight: 600;
+}
+
+.topbar-role {
+  opacity: 0.6;
+}
+
+.topbar-logout {
+  background: #ef4444;
+  color: #ffffff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.topbar-logout:hover {
+  background: #dc2626;
+}
+
+/* =====================================================
+   TABLET & MOBILE
+===================================================== */
+
+@media (max-width: 1024px) {
+  .menu-btn {
+    display: block;          /* SHOW ☰ */
+  }
+}
+
+/* =====================================================
+   MOBILE SMALL
+===================================================== */
+
+@media (max-width: 768px) {
+  .topbar-title {
+    font-size: 16px;
+  }
+
+  .topbar-user {
+    display: none;           /* Hide avatar on small screens */
+  }
+}

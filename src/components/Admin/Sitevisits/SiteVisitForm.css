@@ -1,0 +1,127 @@
+/* ================= LAYOUT ================= */
+
+.layout-wrapper {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  background: #f5f7fb;
+}
+
+.sv-form-content {
+  flex: 1;
+  padding-top: 20px;
+  transition: margin-left 0.3s ease;
+}
+
+/* Desktop */
+@media (min-width: 1025px) {
+  .sv-form-content {
+    margin-left: 250px;
+  }
+}
+
+/* Tablet & Mobile */
+@media (max-width: 1024px) {
+  .sv-form-content {
+    margin-left: 0;
+    padding: 90px 16px 20px;
+  }
+}
+
+/* Overlay */
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 1100;
+}
+
+/* ================= FORM ================= */
+
+.form-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.form-card {
+  max-width: 520px;
+  width: 100%;
+  background: #fff;
+  padding: 28px;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+.form-card h2 {
+  margin-bottom: 22px;
+}
+
+/* FORM ELEMENTS */
+
+.form-column {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-column select,
+.form-column input,
+.form-column textarea {
+  padding: 11px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+}
+
+.time-row {
+  display: flex;
+  gap: 10px;
+}
+
+/* PROPERTY ROW */
+
+.property-card-row {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 14px;
+  display: grid;
+  gap: 10px;
+}
+
+.property-card-row textarea {
+  min-height: 70px;
+  resize: vertical;
+}
+
+/* BUTTONS */
+
+.add-btn {
+  background: #1d4ed8;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.remove-btn {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: none;
+  border-radius: 8px;
+  height: 36px;
+  cursor: pointer;
+}
+
+/* MOBILE */
+@media (max-width: 480px) {
+  .form-card {
+    padding: 20px;
+  }
+
+  .time-row {
+    flex-direction: column;
+  }
+}

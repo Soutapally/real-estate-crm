@@ -1,0 +1,152 @@
+/* ================= LAYOUT ================= */
+
+.layout-wrapper {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  background: #f7f8fa;
+}
+
+/* MAIN CONTENT */
+.fu-content {
+  flex: 1;
+  padding: 40px 50px;
+  padding-top: 100px;
+  transition: margin-left 0.3s ease;
+}
+
+/* Desktop */
+@media (min-width: 1025px) {
+  .fu-content {
+    margin-left: 250px;
+  }
+}
+
+/* Tablet & Mobile */
+@media (max-width: 1024px) {
+  .fu-content {
+    margin-left: 0;
+    padding: 90px 16px 20px;
+  }
+}
+
+/* ================= OVERLAY ================= */
+
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 1100;
+}
+
+/* ================= HEADER ================= */
+
+.fu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.fu-add-btn {
+  background: #0d1b5e;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ================= SECTIONS ================= */
+
+.fu-sections {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+  margin-top: 30px;
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .fu-sections {
+    grid-template-columns: 1fr;
+  }
+}
+
+.fu-section {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  border: 2px solid #ddd;
+}
+
+/* Borders */
+.fu-today-border { border-color: #facc15; }
+.fu-upcoming-border { border-color: #3b82f6; }
+.fu-missed-border { border-color: #ef4444; }
+
+/* ================= TITLES ================= */
+
+.fu-section-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ================= DOTS ================= */
+
+.fu-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.fu-dot.yellow { background: #facc15; }
+.fu-dot.blue { background: #3b82f6; }
+.fu-dot.red { background: #ef4444; }
+
+/* ================= CARDS ================= */
+
+.fu-item-card {
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 14px;
+  border: 1px solid #ddd;
+}
+
+.inner-today { background: #fffbea; }
+.inner-upcoming { background: #eef4ff; }
+.inner-missed { background: #ffecec; }
+
+.fu-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.fu-time {
+  font-size: 14px;
+  margin: 6px 0;
+}
+
+.fu-notes {
+  font-size: 13px;
+  color: #555;
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 480px) {
+  .fu-header h1 {
+    font-size: 20px;
+  }
+
+  .fu-add-btn {
+    width: 100%;
+  }
+}

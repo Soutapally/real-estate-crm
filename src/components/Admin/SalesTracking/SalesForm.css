@@ -1,0 +1,92 @@
+/* ================= LAYOUT ================= */
+
+.layout-wrapper {
+  display: flex;
+  min-height: 100vh;
+  background: #f5f7fb;
+}
+
+.salesForm-content {
+  flex: 1;
+  padding-top: 100px;
+  transition: margin-left 0.3s ease;
+}
+
+/* DESKTOP */
+@media (min-width: 1025px) {
+  .salesForm-content {
+    margin-left: 250px;
+    padding: 70px 40px;
+  }
+}
+
+/* TABLET + MOBILE */
+@media (max-width: 1024px) {
+  .salesForm-content {
+    margin-left: 0;
+    padding: 90px 16px 20px;
+  }
+}
+
+/* SIDEBAR OVERLAY */
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 1100;
+}
+
+/* ================= FORM ================= */
+
+.salesForm-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.salesForm-card {
+  width: 100%;
+  max-width: 520px;
+  background: #fff;
+  padding: 30px;
+  border-radius: 14px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+/* TITLE */
+.salesForm-title {
+  margin-bottom: 20px;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+/* FORM */
+.salesForm-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.salesForm-form input,
+.salesForm-form select,
+.salesForm-form textarea {
+  padding: 11px 12px;
+  border-radius: 8px;
+  border: 1px solid #cfd6e4;
+  font-size: 14px;
+}
+
+.salesForm-form textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+/* MOBILE */
+@media (max-width: 480px) {
+  .salesForm-card {
+    padding: 22px;
+  }
+
+  .salesForm-title {
+    font-size: 20px;
+  }
+}

@@ -1,0 +1,129 @@
+/* ================= LAYOUT ================= */
+
+.layout-wrapper {
+  display: flex;
+  min-height: 100vh;
+  background: #f5f7fb;
+}
+
+.userslist-content {
+  flex: 1;
+  padding-top: 100px;
+  transition: margin-left 0.3s ease;
+}
+
+/* DESKTOP */
+@media (min-width: 1025px) {
+  .userslist-content {
+    margin-left: 250px;
+    padding: 70px;
+  }
+}
+
+/* TABLET & MOBILE */
+@media (max-width: 1024px) {
+  .userslist-content {
+    margin-left: 0;
+    padding: 90px 16px 30px;
+  }
+}
+
+/* SIDEBAR OVERLAY */
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 1100;
+}
+
+/* ================= TITLE ================= */
+
+.userslist-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+/* ================= TABLE ================= */
+
+.userslist-table-wrapper {
+  background: #fff;
+  border-radius: 12px;
+  overflow-x: auto;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+}
+
+.userslist-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 720px; /* 🔥 keeps table readable on mobile */
+}
+
+.userslist-table th,
+.userslist-table td {
+  padding: 14px 16px;
+  text-align: left;
+  font-size: 14px;
+  border-bottom: 1px solid #eee;
+}
+
+.userslist-table th {
+  background: #f8fafc;
+  font-weight: 600;
+}
+
+/* ================= BADGES ================= */
+
+.userslist-role {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.userslist-role-admin {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.userslist-role-user {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+/* ================= STATUS ================= */
+
+.userslist-active {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.userslist-inactive {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+/* ================= ACTIONS ================= */
+
+.actions-col {
+  width: 120px;
+  text-align: center;
+}
+
+.userslist-actions {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.userslist-actions button {
+  padding: 6px 10px;
+}
+
+/* ================= MOBILE TWEAKS ================= */
+
+@media (max-width: 480px) {
+  .userslist-title {
+    font-size: 20px;
+  }
+}

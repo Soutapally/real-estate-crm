@@ -1,0 +1,103 @@
+/* ================= LAYOUT ================= */
+
+.layout-wrapper {
+  display: flex;
+  min-height: 100vh;
+  background: #f5f7fb;
+}
+
+.create-user-content {
+  flex: 1;
+  padding-top: 100px;
+  transition: margin-left 0.3s ease;
+}
+
+/* DESKTOP */
+@media (min-width: 1025px) {
+  .create-user-content {
+    margin-left: 250px;
+    padding: 70px;
+  }
+}
+
+/* TABLET & MOBILE */
+@media (max-width: 1024px) {
+  .create-user-content {
+    margin-left: 0;
+    padding: 90px 16px 30px;
+  }
+}
+
+/* OVERLAY */
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 1100;
+}
+
+/* ================= CARD ================= */
+
+.create-user-card {
+  max-width: 420px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+.create-user-card h2 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+/* USER INFO */
+.logged-user {
+  font-size: 13px;
+  color: #555;
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+/* INPUTS */
+.create-user-card input,
+.create-user-card select {
+  width: 100%;
+  padding: 11px;
+  margin-bottom: 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+/* PASSWORD */
+.password-field {
+  position: relative;
+}
+
+.password-field input {
+  padding-right: 42px;
+}
+
+.eye-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
+}
+
+/* MESSAGES */
+.error {
+  color: #dc2626;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.success {
+  color: #16a34a;
+  font-size: 13px;
+  margin-bottom: 8px;
+}

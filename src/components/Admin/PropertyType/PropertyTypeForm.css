@@ -1,0 +1,131 @@
+/* ================= LAYOUT ================= */
+
+.layout-wrapper {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  background: #f4f6fb;
+}
+
+/* MAIN CONTENT */
+.pt-content {
+  flex: 1;
+  padding-top: 100px; /* Topbar height */
+  transition: margin-left 0.3s ease;
+}
+
+/* Desktop */
+@media (min-width: 1025px) {
+  .pt-content {
+    margin-left: 250px; /* Sidebar width */
+    padding: 60px 40px;
+  }
+}
+
+/* Tablet & Mobile */
+@media (max-width: 1024px) {
+  .pt-content {
+    margin-left: 0;
+    padding: 90px 16px 20px;
+  }
+}
+
+/* Overlay */
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 1100;
+}
+
+/* ================= CARD ================= */
+
+.propertytype-container {
+  display: flex;
+  justify-content: center;
+}
+
+.propertytype-card {
+  width: 100%;
+  max-width: 460px;
+  background: #fff;
+  padding: 26px;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+/* TITLE */
+.propertytype-title {
+  font-size: 22px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+/* FORM */
+.propertytype-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.propertytype-input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.propertytype-btn {
+  background: #0d1b5e;
+  color: #fff;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.propertytype-btn:hover {
+  opacity: 0.9;
+}
+
+/* LIST */
+.propertytype-list-title {
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.propertytype-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 10px;
+}
+
+.propertytype-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  margin-bottom: 10px;
+  background: #f8f9fb;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+/* MOBILE */
+@media (max-width: 480px) {
+  .propertytype-form {
+    flex-direction: column;
+  }
+
+  .propertytype-btn {
+    width: 100%;
+  }
+
+  .propertytype-card {
+    padding: 20px;
+  }
+}

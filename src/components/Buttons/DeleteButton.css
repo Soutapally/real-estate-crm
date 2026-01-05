@@ -1,0 +1,32 @@
+.custom-delete-btn {
+  background: #121111;         
+  color: #fff;
+  border: none;
+
+  padding: 6px 12px;            /* Same as EditButton */
+  border-radius: 8px;
+
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.custom-delete-btn:hover {
+  background: #0c0c0c;          
+  transform: scale(0.97);
+}
+
+.custom-delete-btn:active {
+  transform: scale(0.95);
+}
+
+.btn-icon {
+  font-size: 14px;
+  color: #fff;
+}

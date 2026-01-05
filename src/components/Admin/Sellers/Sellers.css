@@ -1,0 +1,162 @@
+/* ===============================
+   LAYOUT
+================================ */
+
+.layout-wrapper {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ===============================
+   CONTENT AREA
+================================ */
+
+.seller-content {
+  margin-left: 250px;
+  width: 100%;
+  background: #f4f5f7;
+  overflow-y: auto;
+  font-family: "Poppins", sans-serif;
+
+  /* space for fixed topbar */
+  padding: 40px 32px;
+  padding-top: calc(40px + 64px);
+  padding-bottom: 80px; /* 🔥 bottom safe space */
+}
+
+/* ===============================
+   FORM CARD
+================================ */
+
+.sellers-form-container {
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  background: #ffffff;
+  padding: 26px 28px;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+/* ===============================
+   TITLE
+================================ */
+
+.sellers-title {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 22px;
+}
+
+/* ===============================
+   FORM
+================================ */
+
+.sellers-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.sellers-form label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+/* ===============================
+   INPUTS
+================================ */
+
+.sellers-input,
+.sellers-select,
+.sellers-textarea {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid #cfcfcf;
+  border-radius: 8px;
+  font-size: 14px;
+  box-sizing: border-box;
+  background: #fff;
+}
+
+.sellers-input:focus,
+.sellers-select:focus,
+.sellers-textarea:focus {
+  outline: none;
+  border-color: #0d1b5e;
+  box-shadow: 0 0 0 2px rgba(13, 27, 94, 0.12);
+}
+
+/* Notes textarea – FIXED */
+.sellers-textarea {
+  min-height: 90px;   /* 🔥 not too tall */
+  max-height: 120px;
+  resize: vertical;
+}
+
+/* ===============================
+   BUTTON FIX
+================================ */
+
+.sellers-form button {
+  margin-top: 16px;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+
+/* TABLET */
+@media (max-width: 1024px) {
+  .seller-content {
+    margin-left: 0;
+    padding: 32px 24px;
+    padding-top: calc(32px + 64px);
+    padding-bottom: 72px;
+  }
+
+  .sellers-form-container {
+    max-width: 500px;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .seller-content {
+    padding: 24px 16px;
+    padding-top: calc(24px + 64px);
+    padding-bottom: 72px;
+  }
+
+  .sellers-form-container {
+    padding: 22px 18px;
+    border-radius: 12px;
+  }
+
+  .sellers-title {
+    font-size: 20px;
+  }
+}
+
+/* SMALL MOBILE */
+@media (max-width: 480px) {
+  .seller-content {
+    padding: 16px 12px;
+    padding-top: calc(16px + 64px);
+    padding-bottom: 72px;
+  }
+
+  .sellers-form-container {
+    padding: 20px 14px;
+  }
+
+  .sellers-title {
+    font-size: 18px;
+  }
+}

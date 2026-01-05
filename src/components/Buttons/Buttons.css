@@ -1,0 +1,16 @@
+.main-btn {
+  background: #000;         /* black button */
+  color: #fff;              /* white text */
+  border: none;
+  padding: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  transition: 0.2s ease;
+}
+
+.main-btn:hover {
+  opacity: 0.85;            /* subtle hover */
+  transform: scale(0.98);
+}

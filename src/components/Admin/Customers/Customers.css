@@ -1,0 +1,185 @@
+/* ===============================
+   PAGE LAYOUT
+================================ */
+
+.layout-wrapper {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  background: #f5f7fb;
+}
+
+/* ===============================
+   FORM WRAPPER
+================================ */
+
+.form-wrapper {
+  flex: 1;
+  margin-top: 64px;              /* Topbar height */
+  margin-left: 250px;            /* Sidebar width (desktop only) */
+
+  min-height: calc(100vh - 64px);
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+
+  padding: 32px;
+}
+
+/* ===============================
+   FORM CARD
+================================ */
+
+.form-card {
+  width: 100%;
+  max-width: 520px;              /* Desktop size */
+  background: #ffffff;
+  padding: 26px 28px;
+  border-radius: 14px;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.08);
+}
+
+/* ===============================
+   TITLE
+================================ */
+
+.customers-title {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+
+/* ===============================
+   FORM
+================================ */
+
+.form-column {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.form-column input,
+.form-column select,
+.form-column textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  font-size: 14px;
+  background: #fff;
+}
+
+/* Textarea */
+textarea {
+  min-height: 90px;
+  resize: none;
+}
+
+/* ===============================
+   BUDGET ROW
+================================ */
+
+.budget-row {
+  display: flex;
+  gap: 12px;
+}
+
+.budget-row input {
+  flex: 2;
+}
+
+.budget-row select {
+  flex: 1;
+}
+
+/* ===============================
+   BUTTON
+================================ */
+
+.customers-btn {
+  margin-top: 14px;
+  padding: 12px;
+  background: #ff7043;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.customers-btn:hover {
+  opacity: 0.9;
+}
+
+/* Sidebar active */
+.sidebar-item.active {
+  background: #1d4ed8 !important;
+  color: #ffffff !important;
+}
+
+/* =====================================================
+   TABLET VIEW (iPad)
+===================================================== */
+
+@media (max-width: 1024px) {
+  .form-wrapper {
+    margin-left: 0;              /* 🔥 remove sidebar gap */
+    padding: 28px 20px;
+  }
+
+  .form-card {
+    max-width: 600px;            /* slightly wider */
+  }
+}
+
+/* =====================================================
+   MOBILE VIEW (IMPORTANT FIX)
+===================================================== */
+
+@media (max-width: 768px) {
+  .form-wrapper {
+    margin-left: 0;
+    padding: 16px;               /* small padding */
+  }
+
+  .form-card {
+    max-width: 100%;             /* 🔥 FULL WIDTH */
+    padding: 20px 16px;
+    border-radius: 12px;
+  }
+
+  .customers-title {
+    font-size: 20px;
+  }
+
+  /* 🔥 Stack budget fields */
+  .budget-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+/* =====================================================
+   SMALL MOBILE
+===================================================== */
+
+@media (max-width: 480px) {
+  .form-wrapper {
+    padding: 12px;
+  }
+
+  .customers-title {
+    font-size: 18px;
+  }
+
+  .form-column input,
+  .form-column select,
+  .form-column textarea {
+    font-size: 13px;
+    padding: 10px;
+  }
+}

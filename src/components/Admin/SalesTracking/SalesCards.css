@@ -1,0 +1,177 @@
+/* ================= LAYOUT ================= */
+
+.layout-wrapper {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  background: #f5f7fb;
+}
+
+/* MAIN CONTENT */
+.salesCards-content {
+  flex: 1;
+  padding-top: 100px; /* topbar height */
+  transition: margin-left 0.3s ease;
+}
+
+/* DESKTOP */
+@media (min-width: 1025px) {
+  .salesCards-content {
+    margin-left: 250px;
+    padding: 70px 60px;
+  }
+}
+
+/* TABLET + MOBILE */
+@media (max-width: 1024px) {
+  .salesCards-content {
+    margin-left: 0;
+    padding: 90px 16px 20px;
+  }
+}
+
+/* SIDEBAR OVERLAY */
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 1100;
+}
+
+/* ================= HEADER ================= */
+
+.salesCards-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+
+.salesCards-header h1 {
+  margin: 0;
+  font-size: 26px;
+}
+
+.salesCards-header p {
+  margin-top: 6px;
+  color: #666;
+}
+
+/* ADD BUTTON */
+.salesCards-addBtn {
+  background: #0b3c91;
+  color: #fff;
+  border: none;
+  padding: 12px 22px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* MOBILE FULL WIDTH BUTTON */
+@media (max-width: 480px) {
+  .salesCards-addBtn {
+    width: 100%;
+  }
+}
+
+/* ================= LIST ================= */
+
+.salesCards-list {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+/* ================= CARD ================= */
+
+.salesCards-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 22px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+/* TOP */
+.salesCards-cardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.salesCards-cardTop h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.salesCards-property {
+  margin-top: 4px;
+  font-size: 14px;
+  color: #666;
+}
+
+/* AMOUNT */
+.salesCards-amount {
+  text-align: right;
+  font-size: 18px;
+  font-weight: 700;
+  color: #22c55e;
+}
+
+.salesCards-amount span {
+  display: block;
+  font-size: 13px;
+  color: #555;
+  font-weight: 500;
+}
+
+/* DIVIDER */
+.salesCards-divider {
+  margin: 14px 0;
+  border: none;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* BOTTOM */
+.salesCards-cardBottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 14px;
+  color: #444;
+}
+
+.salesCards-notes {
+  flex: 1;
+  color: #555;
+}
+
+/* ACTIONS */
+.salesCards-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* EMPTY */
+.salesCards-empty {
+  text-align: center;
+  color: #777;
+  margin-top: 40px;
+}
+
+/* SMALL MOBILE */
+@media (max-width: 480px) {
+  .salesCards-header h1 {
+    font-size: 20px;
+  }
+
+  .salesCards-card {
+    padding: 18px;
+  }
+}

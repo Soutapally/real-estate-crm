@@ -1,0 +1,31 @@
+.custom-edit-btn {
+  background: #000;
+  color: #fff;
+  border: none;
+
+  /* 🔥 REDUCED INNER SPACING */
+  padding: 6px 12px;
+
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+
+  display: inline-flex;
+  align-items: center;
+
+  /* 🔥 REDUCED ICON GAP */
+  gap: 6px;
+
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.custom-edit-btn:hover {
+  background: #222;
+  transform: scale(0.97);
+}
+
+.btn-icon {
+  font-size: 14px;
+  color: #fff;
+}

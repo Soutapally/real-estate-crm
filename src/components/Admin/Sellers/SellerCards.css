@@ -1,0 +1,250 @@
+/* ===============================
+   LAYOUT
+================================ */
+
+.layout-wrapper {
+  display: flex;
+  height: 100vh;
+}
+
+/* ===============================
+   CONTENT
+================================ */
+
+.seller-content {
+  margin-left: 250px;
+  padding: 35px 50px;
+  width: 100%;
+  background: #f4f5f7;
+  overflow-y: auto;
+  font-family: "Poppins", sans-serif;
+
+  /* 🔥 Topbar space */
+  padding-top: calc(35px + 64px);
+}
+
+/* ===============================
+   HEADER
+================================ */
+
+.sellers-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+}
+
+.sellers-header h1 {
+  font-size: 32px;
+  font-weight: 800;
+}
+
+.sellers-header p {
+  font-size: 14px;
+  opacity: 0.65;
+}
+
+.sellers-add-btn {
+  background: #0d1b5e;
+  color: #fff;
+  padding: 10px 22px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+}
+
+/* ===============================
+   FILTERS
+================================ */
+
+.seller-filters {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.seller-filter-input,
+.seller-filter-select {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #dcdcdc;
+  font-size: 14px;
+  background: #fff;
+  min-width: 220px;
+}
+
+/* ===============================
+   GRID
+================================ */
+
+.sellers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  gap: 22px;
+}
+
+/* ===============================
+   CARD
+================================ */
+
+.seller-card {
+  position: relative;
+  background: #fff;
+  border-radius: 12px;
+  padding: 22px;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.04);
+  transition: .25s;
+}
+
+.seller-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+}
+
+.edit-btn-wrapper {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+
+/* ===============================
+   TEXT
+================================ */
+
+.seller-name {
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.seller-email {
+  font-size: 13px;
+  color: #6b6b6b;
+  margin-bottom: 14px;
+}
+
+.seller-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.seller-label {
+  font-size: 12px;
+  color: #777;
+}
+
+.seller-phone {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.seller-type {
+  font-size: 15px;
+  font-weight: 700;
+  color: #16a34a;
+}
+
+/* ===============================
+   SECTIONS
+================================ */
+
+.seller-section {
+  margin-bottom: 12px;
+  border-top: 1px solid #eee;
+  padding-top: 10px;
+}
+
+.seller-value {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.seller-value-bold {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+/* ===============================
+   NOTES
+================================ */
+
+.seller-notes {
+  margin-top: 10px;
+}
+
+.seller-note-text {
+  font-size: 13px;
+  color: #444;
+  font-style: italic;
+}
+
+/* ===============================
+   DATE
+================================ */
+
+.seller-added {
+  font-size: 12px;
+  color: #666;
+  margin-top: 14px;
+  border-top: 1px solid #eee;
+  padding-top: 10px;
+}
+
+.seller-property-type-badge {
+  display: inline-block;
+  background: #eef2f7;
+  color: #333;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  margin-bottom: 8px;
+  width: fit-content;
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+/* TABLET */
+@media (max-width: 1024px) {
+  .seller-content {
+    margin-left: 0;
+    padding: 28px 24px;
+    padding-top: calc(28px + 64px);
+  }
+
+  .sellers-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .seller-content {
+    margin-left: 0;
+    padding: 20px 16px;
+    padding-top: calc(20px + 64px);
+  }
+
+  .sellers-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .sellers-add-btn {
+    width: 100%;
+  }
+}
+
+/* SMALL MOBILE */
+@media (max-width: 480px) {
+  .seller-content {
+    padding: 16px 12px;
+    padding-top: calc(16px + 64px);
+  }
+}

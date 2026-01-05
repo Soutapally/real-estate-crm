@@ -1,0 +1,197 @@
+/* =========================
+   MAIN LAYOUT
+========================= */
+
+.dashboard-main {
+  margin-left: 260px;              /* Sidebar width */
+  background: #f7f9fb;
+  min-height: 100vh;
+  transition: margin-left 0.3s ease;
+}
+
+/* =========================
+   PAGE WRAPPER
+========================= */
+
+.dashboard-page {
+  padding: 50px;
+  padding-top: calc(50px + 64px);  /* 🔥 Topbar space */
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.dashboard-header h1 {
+  font-size: 28px;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.dashboard-header p {
+  color: #6b7280;
+  font-size: 15px;
+}
+
+/* =========================
+   STATS GRID
+========================= */
+
+.dashboard-stats-grid {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+/* =========================
+   STAT CARD
+========================= */
+
+.dashboard-stat-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dashboard-stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+}
+
+.dashboard-stat-card.danger {
+  border-left: 5px solid #ef4444;
+}
+
+/* =========================
+   TEXT
+========================= */
+
+.dashboard-stat-title {
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.dashboard-stat-value {
+  font-size: 26px;
+  margin: 8px 0;
+  font-weight: 600;
+  color: #111827;
+}
+
+.dashboard-stat-sub {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.dashboard-stat-sub.positive {
+  color: #16a34a;
+  font-weight: 500;
+}
+
+/* =========================
+   ICON
+========================= */
+
+.dashboard-stat-icon {
+  font-size: 28px;
+  opacity: 0.9;
+}
+
+/* =========================
+   LOADING
+========================= */
+
+.loading {
+  padding: 30px;
+  font-size: 16px;
+  color: #374151;
+}
+
+/* =====================================================
+   TABLET VIEW
+===================================================== */
+
+@media (max-width: 1024px) {
+  .dashboard-main {
+    margin-left: 0;
+  }
+
+  .dashboard-page {
+    padding: 32px;
+    padding-top: calc(32px + 64px);   /* 🔥 KEEP TOPBAR SPACE */
+  }
+
+  .dashboard-stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+}
+
+/* =====================================================
+   MOBILE VIEW
+===================================================== */
+
+@media (max-width: 768px) {
+  .dashboard-main {
+    margin-left: 0;
+  }
+
+  .dashboard-page {
+    padding: 20px;
+    padding-top: calc(20px + 64px);   /* 🔥 KEEP TOPBAR SPACE */
+  }
+
+  .dashboard-header h1 {
+    font-size: 22px;
+  }
+
+  .dashboard-header p {
+    font-size: 14px;
+  }
+
+  .dashboard-stats-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .dashboard-stat-card {
+    padding: 18px;
+  }
+
+  .dashboard-stat-value {
+    font-size: 22px;
+  }
+
+  .dashboard-stat-icon {
+    font-size: 24px;
+  }
+}
+
+/* =====================================================
+   VERY SMALL DEVICES
+===================================================== */
+
+@media (max-width: 480px) {
+  .dashboard-page {
+    padding: 16px;
+    padding-top: calc(16px + 64px);   /* 🔥 KEEP TOPBAR SPACE */
+  }
+
+  .dashboard-stat-card {
+    padding: 16px;
+  }
+
+  .dashboard-stat-title {
+    font-size: 13px;
+  }
+
+  .dashboard-stat-value {
+    font-size: 20px;
+  }
+}

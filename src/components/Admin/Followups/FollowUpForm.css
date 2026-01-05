@@ -1,0 +1,237 @@
+/* =====================================================
+   APP LAYOUT (SIDEBAR + CONTENT)
+===================================================== */
+
+.app-layout {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  background: #f4f5f7;
+}
+
+/* MAIN CONTENT AREA */
+.app-content {
+  flex: 1;
+  padding-top: 64px;               /* Topbar height */
+  overflow-y: auto;
+  transition: margin-left 0.3s ease;
+}
+
+/* Desktop only: sidebar pushes content */
+@media (min-width: 1025px) {
+  .app-content {
+    margin-left: 250px;            /* Sidebar width */
+  }
+}
+
+/* Tablet & Mobile: sidebar overlays */
+@media (max-width: 1024px) {
+  .app-content {
+    margin-left: 0;
+  }
+}
+
+/* =====================================================
+   FORM WRAPPER
+===================================================== */
+
+.followup-form-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 30px 16px;
+}
+
+/* =====================================================
+   FORM CARD
+===================================================== */
+
+.followup-form-card {
+  width: 100%;
+  max-width: 480px;
+  background: #ffffff;
+  padding: 28px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+/* =====================================================
+   TITLE
+===================================================== */
+
+.followup-title {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+/* =====================================================
+   FORM LAYOUT
+===================================================== */
+
+.followup-form-column {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* =====================================================
+   INPUTS & TEXTAREA
+===================================================== */
+
+.followup-input,
+.followup-textarea {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+}
+
+.followup-input:focus,
+.followup-textarea:focus {
+  border-color: #0d1b5e;
+  box-shadow: 0 0 0 3px rgba(13, 27, 94, 0.1);
+}
+
+.followup-textarea {
+  height: 90px;
+  resize: none;
+}
+
+/* =====================================================
+   LABELS
+===================================================== */
+
+.followup-label {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* =====================================================
+   TIME ROW
+===================================================== */
+
+.followup-time-row {
+  display: flex;
+  gap: 10px;
+}
+
+/* =====================================================
+   MULTI SELECT
+===================================================== */
+
+.multi-select-container {
+  position: relative;
+}
+
+.multi-select-input {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+  min-height: 44px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.placeholder {
+  color: #999;
+}
+
+.arrow {
+  font-size: 12px;
+}
+
+/* =====================================================
+   SELECTED TAGS
+===================================================== */
+
+.selected-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag {
+  background: #0d1b5e;
+  color: #ffffff;
+  padding: 4px 8px;
+  border-radius: 14px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tag button {
+  background: none;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+/* =====================================================
+   DROPDOWN
+===================================================== */
+
+.multi-select-dropdown {
+  position: absolute;
+  top: 110%;
+  width: 100%;
+  max-height: 180px;
+  overflow-y: auto;
+  background: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  z-index: 20;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.dropdown-item {
+  padding: 10px;
+  display: flex;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background: #f0f2f8;
+}
+
+/* =====================================================
+   RESPONSIVE FORM ADJUSTMENTS
+===================================================== */
+
+/* Tablet */
+@media (max-width: 768px) {
+  .followup-form-wrapper {
+    padding: 20px 12px;
+  }
+
+  .followup-form-card {
+    padding: 22px;
+  }
+
+  .followup-time-row {
+    flex-direction: column;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+  .followup-form-card {
+    padding: 18px;
+  }
+
+  .followup-title {
+    font-size: 20px;
+  }
+
+  .followup-input,
+  .followup-textarea {
+    font-size: 13px;
+  }
+}
