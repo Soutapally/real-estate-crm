@@ -72,35 +72,46 @@ const loadPropertyTypes = async () => {
   };
 
   const submit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    const payload = {
-      name: data.name,
-      phone: data.phone,
-      phone_alt: data.phone_alt,
-      email: data.email,
-      budget_from: `${data.budget_from_value} ${data.budget_from_unit}`,
-      budget_to: `${data.budget_to_value} ${data.budget_to_unit}`,
-      location: data.location,
-      property_type: data.property_type,
-      requirement: data.requirement,
-      status: data.status,
-    };
+  const payload = {
+    name: data.name,
+    phone: data.phone,
+    phone_alt: data.phone_alt || null,
+    email: data.email || null,
+    budget_from: `${data.budget_from_value} ${data.budget_from_unit}`,
+    budget_to: `${data.budget_to_value} ${data.budget_to_unit}`,
+    location: data.location,
+    property_type: data.property_type,
+    requirement: data.requirement,
+    status: data.status,
+  };
 
-    const url = id
-      ? `${API_BASE_URL}/api/update-customer/${id}`
-      : `${API_BASE_URL}/api/add-customer`;
+  const url = `${API_BASE_URL}/api/update-customer/${id}`;
 
+  try {
     const res = await fetch(url, {
-      method: id ? "PUT" : "POST",
+      method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
 
+    if (!res.ok) {
+      const text = await res.text();
+      console.error("Server error:", text);
+      alert("Update failed (check backend logs)");
+      return;
+    }
+
     const result = await res.json();
     alert(result.message);
     navigate("/customers");
-  };
+  } catch (err) {
+    console.error("Request failed:", err);
+    alert("Network error");
+  }
+};
+
 
   return (
     <div className="layout-wrapper">
