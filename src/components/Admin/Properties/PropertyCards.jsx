@@ -32,6 +32,14 @@ const res = await fetch(`${API_BASE_URL}/api/properties`);
   useEffect(() => {
     loadProperties();
   }, []);
+// ✅ CLEAN LOCATION FORMATTER (REUSABLE)
+const formatLocation = (...values) => {
+  const cleaned = values
+    .map(v => (typeof v === "string" ? v.trim() : ""))
+    .filter(v => v && v !== ",");
+
+  return cleaned.length > 0 ? cleaned.join(", ") : "—";
+};
 
   /* ---------------- DELETE PROPERTY ---------------- */
   const handleDeleteProperty = async (propertyId) => {
@@ -171,9 +179,12 @@ const res = await fetch(`${API_BASE_URL}/api/properties`);
 
               <h2 className="property-title">{p.property_name}</h2>
 
-              <p className="property-location">
+              {/* <p className="property-location">
                 {p.address}, {p.mandal}, {p.district}
-              </p>
+              </p> */}
+<p className="property-location">
+  {formatLocation(p.mandal, p.address, p.district)}
+</p>
 
               <p className="property-price">₹{p.price}</p>
 

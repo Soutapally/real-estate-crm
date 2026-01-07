@@ -199,11 +199,15 @@ const res = await fetch(`${API_BASE_URL}/api/sellers`);
                 {/* <p className="seller-value">
                   {s.address}, {s.city}, {s.district}
                 </p> */}
-                <p className="seller-value">
-  {[s.address, s.city, s.district]
-    .filter(v => v && v.trim() !== "")
-    .join(", ") || "—"}
-</p>
+                 <p className="seller-value">
+    {(() => {
+      const location = [s.address, s.city, s.district]
+        .map(v => (typeof v === "string" ? v.trim() : ""))
+        .filter(v => v && v !== ",");
+
+      return location.length > 0 ? location.join(", ") : "—";
+    })()}
+  </p>
 
               </div>
 
