@@ -39,15 +39,37 @@ const res = await fetch(`${API_BASE_URL}/api/site-visits`);
     fetchSiteVisits();
   };
 
-  const formatDate = (dt) =>
-    new Date(dt).toLocaleDateString("en-IN");
+  // const formatDate = (dt) =>
+  //   new Date(dt).toLocaleDateString("en-IN");
 
-  const formatTime = (dt) =>
-    new Date(dt).toLocaleTimeString("en-IN", {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    });
+  // const formatTime = (dt) =>
+  //   new Date(dt).toLocaleTimeString("en-IN", {
+  //     hour: "2-digit",
+  //     minute: "2-digit",
+  //     hour12: true,
+  //   });
+  const parseIST = (dt) => {
+  if (!dt) return null;
+  const safe = dt.replace(" ", "T");
+  return new Date(`${safe}+05:30`);
+};
+
+const formatDate = (dt) => {
+  const d = parseIST(dt);
+  return d ? d.toLocaleDateString("en-IN") : "";
+};
+
+const formatTime = (dt) => {
+  const d = parseIST(dt);
+  return d
+    ? d.toLocaleTimeString("en-IN", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      })
+    : "";
+};
+
 
   return (
     <div className="layout-wrapper">

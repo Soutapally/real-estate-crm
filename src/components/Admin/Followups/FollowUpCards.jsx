@@ -50,6 +50,18 @@ const res = await fetch(`${API_BASE_URL}/api/followups`);
   const missedList = followups.filter(
     (f) => normalizeDate(f.next_followup_at) < todayTime
   );
+const formatFollowupTime = (dt) => {
+  if (!dt) return "";
+
+  // Force IST interpretation
+  const safe = dt.replace(" ", "T");
+  const d = new Date(`${safe}+05:30`);
+
+  return d.toLocaleString("en-IN", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
+};
 
   /* ================= CARD ================= */
   const renderCard = (f, type) => (
@@ -64,11 +76,12 @@ const res = await fetch(`${API_BASE_URL}/api/followups`);
       </div>
 
       <p className="fu-time">
-        📅{" "}
+        {/* 📅{" "}
         {new Date(f.next_followup_at).toLocaleString("en-IN", {
           dateStyle: "medium",
           timeStyle: "short",
-        })}
+        })} */}
+        📅 {formatFollowupTime(f.next_followup_at)}
       </p>
 
       {f.properties && (

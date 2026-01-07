@@ -60,7 +60,9 @@ export default function SiteVisitForm() {
         if (!rows.length) return;
 
         const first = rows[0];
-        const dt = new Date(first.visit_datetime);
+        // const dt = new Date(first.visit_datetime);
+const safe = first.visit_datetime.replace(" ", "T");
+const dt = new Date(`${safe}+05:30`);
 
         setCustomerId(first.customer_id);
         setVisitDate(dt.toISOString().split("T")[0]);

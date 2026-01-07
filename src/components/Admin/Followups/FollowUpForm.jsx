@@ -49,7 +49,10 @@ export default function FollowUpForm() {
     fetch(`${API_BASE_URL}/api/edit-followup/${id}`)
       .then(res => res.json())
       .then(data => {
-        const dt = new Date(data.next_followup_at);
+        // const dt = new Date(data.next_followup_at);
+        const safe = data.next_followup_at.replace(" ", "T");
+const dt = new Date(`${safe}+05:30`);
+
         let h = dt.getHours();
         let mer = "AM";
 
