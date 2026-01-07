@@ -59,25 +59,54 @@ export default function SiteVisitForm() {
       .then(rows => {
         if (!rows.length) return;
 
-        const first = rows[0];
-        // const dt = new Date(first.visit_datetime);
-const safe = first.visit_datetime.replace(" ", "T");
-const dt = new Date(`${safe}+05:30`);
+//         const first = rows[0];
+//         // const dt = new Date(first.visit_datetime);
+// const safe = first.visit_datetime.replace(" ", "T");
+// const dt = new Date(`${safe}+05:30`);
 
-        setCustomerId(first.customer_id);
-        setVisitDate(dt.toISOString().split("T")[0]);
+//         setCustomerId(first.customer_id);
+//         setVisitDate(dt.toISOString().split("T")[0]);
 
-        let h = dt.getHours();
-        setMeridiem(h >= 12 ? "PM" : "AM");
-        h = h % 12 || 12;
-        setHour(h.toString());
-        setMinute(dt.getMinutes().toString().padStart(2, "0"));
+//         let h = dt.getHours();
+//         setMeridiem(h >= 12 ? "PM" : "AM");
+//         h = h % 12 || 12;
+//         setHour(h.toString());
+//         setMinute(dt.getMinutes().toString().padStart(2, "0"));
 
-        if (first.followup_datetime) {
-          setFollowUpDate(
-            new Date(first.followup_datetime).toISOString().split("T")[0]
-          );
-        }
+//         if (first.followup_datetime) {
+//           setFollowUpDate(
+//             new Date(first.followup_datetime).toISOString().split("T")[0]
+//           );
+//         }
+const first = rows[0];
+
+setCustomerId(first.customer_id);
+
+/* ✅ SAFE VISIT DATETIME PREFILL */
+if (first.visit_datetime) {
+  const safe = first.visit_datetime.replace(" ", "T");
+  const dt = new Date(`${safe}+05:30`);
+
+  if (!isNaN(dt.getTime())) {
+    setVisitDate(dt.toISOString().split("T")[0]);
+
+    let h = dt.getHours();
+    setMeridiem(h >= 12 ? "PM" : "AM");
+    h = h % 12 || 12;
+    setHour(String(h));
+    setMinute(String(dt.getMinutes()).padStart(2, "0"));
+  }
+}
+
+/* ✅ SAFE FOLLOW-UP DATE PREFILL */
+if (first.followup_datetime) {
+  const safeFU = first.followup_datetime.replace(" ", "T");
+  const fdt = new Date(`${safeFU}+05:30`);
+
+  if (!isNaN(fdt.getTime())) {
+    setFollowUpDate(fdt.toISOString().split("T")[0]);
+  }
+}
 
         setRows(
           rows.map(r => ({
