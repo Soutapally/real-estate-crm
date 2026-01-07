@@ -175,7 +175,10 @@ const res = await fetch(`${API_BASE_URL}/api/sellers`);
               </div>
 
               <h2 className="seller-name">{s.name}</h2>
-              <p className="seller-email">{s.email}</p>
+              {/* <p className="seller-email">{s.email}</p> */}
+              {s.email && s.email !== "NULL" && (
+  <p className="seller-email">{s.email}</p>
+)}
 
               <div className="seller-row">
                 <div>

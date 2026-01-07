@@ -140,7 +140,8 @@ const res = await fetch(`${API_BASE_URL}/api/seller/${id}`);
               className="sellers-input"
               type="email"
               name="email"
-              value={client.email || ""}
+              // value={client.email || ""}
+              value={client.email && client.email !== "NULL" ? client.email : ""}
               onChange={change}
             />
 
