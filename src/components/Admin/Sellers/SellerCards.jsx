@@ -196,9 +196,15 @@ const res = await fetch(`${API_BASE_URL}/api/sellers`);
 
               <div className="seller-section">
                 <span className="seller-label">Location:</span>
-                <p className="seller-value">
+                {/* <p className="seller-value">
                   {s.address}, {s.city}, {s.district}
-                </p>
+                </p> */}
+                <p className="seller-value">
+  {[s.address, s.city, s.district]
+    .filter(v => v && v.trim() !== "")
+    .join(", ") || "—"}
+</p>
+
               </div>
 
               <div className="seller-section">
