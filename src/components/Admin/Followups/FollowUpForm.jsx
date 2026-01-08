@@ -43,38 +43,75 @@ export default function FollowUpForm() {
   }, []);
 
   /* EDIT MODE */
-  useEffect(() => {
-    if (!isEdit) return;
+//   useEffect(() => {
+//     if (!isEdit) return;
 
-    fetch(`${API_BASE_URL}/api/edit-followup/${id}`)
-      .then(res => res.json())
-      .then(data => {
-        // const dt = new Date(data.next_followup_at);
-        const safe = data.next_followup_at.replace(" ", "T");
-const dt = new Date(`${safe}+05:30`);
+//     fetch(`${API_BASE_URL}/api/edit-followup/${id}`)
+//       .then(res => res.json())
+//       .then(data => {
+//         // const dt = new Date(data.next_followup_at);
+//         const safe = data.next_followup_at.replace(" ", "T");
+// const dt = new Date(`${safe}+05:30`);
 
-        let h = dt.getHours();
-        let mer = "AM";
+//         let h = dt.getHours();
+//         let mer = "AM";
 
-        if (h >= 12) {
-          mer = "PM";
-          if (h > 12) h -= 12;
-        }
-        if (h === 0) h = 12;
+//         if (h >= 12) {
+//           mer = "PM";
+//           if (h > 12) h -= 12;
+//         }
+//         if (h === 0) h = 12;
 
-        setForm({
-          customer_id: String(data.customer_id),
-          property_ids: data.property_ids.map(String),
-          followup_date: dt.toISOString().split("T")[0],
-          hour: String(h),
-          minute: String(dt.getMinutes()).padStart(2, "0"),
-          meridiem: mer,
-          status: data.status || "",
-          notes: data.notes || "",
-          showPropertyDropdown: false
-        });
+//         setForm({
+//           customer_id: String(data.customer_id),
+//           property_ids: data.property_ids.map(String),
+//           followup_date: dt.toISOString().split("T")[0],
+//           hour: String(h),
+//           minute: String(dt.getMinutes()).padStart(2, "0"),
+//           meridiem: mer,
+//           status: data.status || "",
+//           notes: data.notes || "",
+//           showPropertyDropdown: false
+//         });
+//       });
+//   }, [id, isEdit]);
+
+
+/* EDIT MODE */
+useEffect(() => {
+  if (!isEdit) return;
+
+  fetch(`${API_BASE_URL}/api/edit-followup/${id}`)
+    .then(res => res.json())
+    .then(data => {
+      // ❌ REMOVED +05:30
+      const safe = data.next_followup_at.replace(" ", "T");
+      const dt = new Date(safe);
+
+      if (isNaN(dt.getTime())) return;
+
+      let h = dt.getHours();
+      let mer = "AM";
+
+      if (h >= 12) {
+        mer = "PM";
+        if (h > 12) h -= 12;
+      }
+      if (h === 0) h = 12;
+
+      setForm({
+        customer_id: String(data.customer_id),
+        property_ids: data.property_ids.map(String),
+        followup_date: dt.toISOString().split("T")[0],
+        hour: String(h),
+        minute: String(dt.getMinutes()).padStart(2, "0"),
+        meridiem: mer,
+        status: data.status || "",
+        notes: data.notes || "",
+        showPropertyDropdown: false
       });
-  }, [id, isEdit]);
+    });
+}, [id, isEdit]);
 
   /* CLOSE PROPERTY DROPDOWN */
   useEffect(() => {

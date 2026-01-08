@@ -48,37 +48,31 @@ const res = await fetch(`${API_BASE_URL}/api/site-visits`);
   //     minute: "2-digit",
   //     hour12: true,
   //   });
-  const parseDBTimestampIST = (value) => {
+const parseDBTimestamp = (value) => {
   if (!value) return null;
 
-  // Already ISO or already has timezone → let JS handle it
-  if (typeof value === "string" && value.includes("T")) {
-    const d = new Date(value);
-    return isNaN(d.getTime()) ? null : d;
-  }
+  // Convert "YYYY-MM-DD HH:mm:ss" → valid ISO
+  const iso = value.replace(" ", "T");
+  const d = new Date(iso);
 
-  // Postgres timestamp WITHOUT timezone → force IST
-  const safe = value.replace(" ", "T");
-  const d = new Date(`${safe}+05:30`);
   return isNaN(d.getTime()) ? null : d;
 };
 
- const formatDate = (dt) => {
-  const d = parseDBTimestampIST(dt);
+const formatDate = (dt) => {
+  const d = parseDBTimestamp(dt);
   return d ? d.toLocaleDateString("en-IN") : "—";
 };
 
 const formatTime = (dt) => {
-  const d = parseDBTimestampIST(dt);
+  const d = parseDBTimestamp(dt);
   return d
     ? d.toLocaleTimeString("en-IN", {
         hour: "2-digit",
         minute: "2-digit",
-        hour12: true,
+        hour12: true, // ✅ 24h → 12h AM/PM
       })
     : "—";
 };
-
 
 
   return (

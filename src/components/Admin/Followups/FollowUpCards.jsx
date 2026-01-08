@@ -14,7 +14,7 @@ export default function FollowUpCards() {
   /* ================= LOAD FOLLOWUPS ================= */
   const loadFollowUps = async () => {
     try {
-const res = await fetch(`${API_BASE_URL}/api/followups`);
+      const res = await fetch(`${API_BASE_URL}/api/followups`);
       const data = await res.json();
       setFollowups(Array.isArray(data) ? data : []);
     } catch (err) {
@@ -28,12 +28,37 @@ const res = await fetch(`${API_BASE_URL}/api/followups`);
   }, []);
 
   /* ================= DATE NORMALIZATION ================= */
+
+  // ✅ SAME FUNCTION, ONLY TIMEZONE FIXED
+  const parsePostgresTimestamp = (value) => {
+    if (!value) return null;
+
+    // Postgres: "YYYY-MM-DD HH:mm:ss"
+    const safe = value.replace(" ", "T");
+    const d = new Date(safe); // ❌ NO +05:30
+    return isNaN(d.getTime()) ? null : d;
+  };
+
+  // ✅ SAME normalizeDate logic (DO NOT TOUCH)
   const normalizeDate = (dt) => {
-    if (!dt) return null;
-    const d = new Date(dt);
+    const d = parsePostgresTimestamp(dt);
+    if (!d) return null;
     d.setHours(0, 0, 0, 0);
     return d.getTime();
   };
+
+  // ✅ SAME formatter, just correct AM/PM
+  const formatFollowupTime = (dt) => {
+    const d = parsePostgresTimestamp(dt);
+    if (!d) return "—";
+
+    return d.toLocaleString("en-IN", {
+      dateStyle: "medium",
+      timeStyle: "short", // AM / PM
+    });
+  };
+
+  /* ================= TODAY / UPCOMING / MISSED ================= */
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -50,20 +75,9 @@ const res = await fetch(`${API_BASE_URL}/api/followups`);
   const missedList = followups.filter(
     (f) => normalizeDate(f.next_followup_at) < todayTime
   );
-const formatFollowupTime = (dt) => {
-  if (!dt) return "";
-
-  // Force IST interpretation
-  const safe = dt.replace(" ", "T");
-  const d = new Date(`${safe}+05:30`);
-
-  return d.toLocaleString("en-IN", {
-    dateStyle: "medium",
-    timeStyle: "short",
-  });
-};
 
   /* ================= CARD ================= */
+
   const renderCard = (f, type) => (
     <div className={`fu-item-card inner-${type}`} key={f.followup_id}>
       <div className="fu-item-header">
@@ -76,11 +90,6 @@ const formatFollowupTime = (dt) => {
       </div>
 
       <p className="fu-time">
-        {/* 📅{" "}
-        {new Date(f.next_followup_at).toLocaleString("en-IN", {
-          dateStyle: "medium",
-          timeStyle: "short",
-        })} */}
         📅 {formatFollowupTime(f.next_followup_at)}
       </p>
 
@@ -99,7 +108,6 @@ const formatFollowupTime = (dt) => {
       <Topbar toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
       <Sidebar isOpen={sidebarOpen} />
 
-      {/* Overlay for mobile */}
       {sidebarOpen && (
         <div
           className="sidebar-overlay"
@@ -124,30 +132,21 @@ const formatFollowupTime = (dt) => {
 
         <div className="fu-sections">
           <div className="fu-section fu-today-border">
-            <h2 className="fu-section-title">
-              <span className="fu-dot yellow"></span>
-              Today
-            </h2>
+            <h2 className="fu-section-title">Today</h2>
             {todaysList.length === 0
               ? <p className="fu-empty">No follow-ups</p>
               : todaysList.map((f) => renderCard(f, "today"))}
           </div>
 
           <div className="fu-section fu-upcoming-border">
-            <h2 className="fu-section-title">
-              <span className="fu-dot blue"></span>
-              Upcoming
-            </h2>
+            <h2 className="fu-section-title">Upcoming</h2>
             {upcomingList.length === 0
               ? <p className="fu-empty">No upcoming</p>
               : upcomingList.map((f) => renderCard(f, "upcoming"))}
           </div>
 
           <div className="fu-section fu-missed-border">
-            <h2 className="fu-section-title">
-              <span className="fu-dot red"></span>
-              Missed
-            </h2>
+            <h2 className="fu-section-title">Missed</h2>
             {missedList.length === 0
               ? <p className="fu-empty">No missed</p>
               : missedList.map((f) => renderCard(f, "missed"))}

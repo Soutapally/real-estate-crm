@@ -58,20 +58,32 @@ export default function FinanceForm() {
     setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async e => {
-    e.preventDefault();
+  e.preventDefault();
 
-    const url = isEdit
-      ? `${API_BASE_URL}/api/finance/${id}`
-      : `${API_BASE_URL}/api/add-finance`;
-
-    await fetch(url, {
-      method: isEdit ? "PUT" : "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form)
-    });
-
-    navigate("/finances");
+  const payload = {
+    type: form.type,
+    category: form.category,
+    property_name: isEmployeeCategory ? null : form.property_name,
+    amount: form.amount,
+    record_date: form.record_date,
+    notes: form.notes,
+    employee_id: isEmployeeCategory ? form.employee_id : null,
+    employee_amount: isEmployeeCategory ? form.employee_amount : null
   };
+
+  const url = isEdit
+    ? `${API_BASE_URL}/api/finance/${id}`
+    : `${API_BASE_URL}/api/add-finance`;
+
+  await fetch(url, {
+    method: isEdit ? "PUT" : "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  });
+
+  navigate("/finances");
+};
+
 
   const isEmployeeCategory =
     form.category === "Salary" || form.category === "Incentives";
