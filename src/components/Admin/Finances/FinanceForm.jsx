@@ -57,32 +57,51 @@ export default function FinanceForm() {
   const handleChange = e =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleSubmit = async e => {
+ const handleSubmit = async (e) => {
   e.preventDefault();
+
+  const isEmployeeCategory =
+    form.category === "Salary" || form.category === "Incentives";
 
   const payload = {
     type: form.type,
     category: form.category,
-    property_name: isEmployeeCategory ? null : form.property_name,
-    amount: form.amount,
+
+    // 🔥 IMPORTANT
+    property_name: isEmployeeCategory ? null : form.property_name || null,
+
+    amount: Number(form.amount),
+
     record_date: form.record_date,
-    notes: form.notes,
-    employee_id: isEmployeeCategory ? form.employee_id : null,
-    employee_amount: isEmployeeCategory ? form.employee_amount : null
+
+    notes: form.notes || null,
+
+    employee_id: isEmployeeCategory ? Number(form.employee_id) : null,
+
+    employee_amount: isEmployeeCategory
+      ? Number(form.employee_amount)
+      : null
   };
 
   const url = isEdit
     ? `${API_BASE_URL}/api/finance/${id}`
     : `${API_BASE_URL}/api/add-finance`;
 
-  await fetch(url, {
+  const res = await fetch(url, {
     method: isEdit ? "PUT" : "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload)
   });
 
+  if (!res.ok) {
+    const err = await res.json();
+    alert(err.message || "Save failed");
+    return;
+  }
+
   navigate("/finances");
 };
+
 
 
   const isEmployeeCategory =

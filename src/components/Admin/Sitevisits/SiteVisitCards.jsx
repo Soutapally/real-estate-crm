@@ -51,12 +51,13 @@ const res = await fetch(`${API_BASE_URL}/api/site-visits`);
 const parseDBTimestamp = (value) => {
   if (!value) return null;
 
-  // Convert "YYYY-MM-DD HH:mm:ss" → valid ISO
-  const iso = value.replace(" ", "T");
-  const d = new Date(iso);
+  const [datePart, timePart] = value.split(" ");
+  const [y, m, d] = datePart.split("-").map(Number);
+  const [hh, mm] = timePart.split(":").map(Number);
 
-  return isNaN(d.getTime()) ? null : d;
+  return new Date(y, m - 1, d, hh, mm); // 👈 LOCAL
 };
+
 
 const formatDate = (dt) => {
   const d = parseDBTimestamp(dt);

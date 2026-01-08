@@ -84,19 +84,21 @@ setCustomerId(first.customer_id);
 
 /* ✅ SAFE VISIT DATETIME PREFILL */
 if (first.visit_datetime) {
-  const dt = new Date(first.visit_datetime.replace(" ", "T"));
+  const [datePart, timePart] = first.visit_datetime.split(" ");
+  const [y, m, d] = datePart.split("-").map(Number);
+  const [hh, mm] = timePart.split(":").map(Number);
 
-  if (!isNaN(dt.getTime())) {
-    setVisitDate(dt.toISOString().split("T")[0]);
+  const dt = new Date(y, m - 1, d, hh, mm); // 👈 LOCAL TIME
 
-    let h = dt.getHours(); // 24-hour from DB
-    setMeridiem(h >= 12 ? "PM" : "AM");
+  setVisitDate(datePart);
 
-    h = h % 12 || 12; // convert to 12-hour
-    setHour(String(h));
-    setMinute(String(dt.getMinutes()).padStart(2, "0"));
-  }
+  let h = dt.getHours();
+  setMeridiem(h >= 12 ? "PM" : "AM");
+  h = h % 12 || 12;
+  setHour(String(h));
+  setMinute(String(mm).padStart(2, "0"));
 }
+
 
 
 /* ✅ SAFE FOLLOW-UP DATE PREFILL */
