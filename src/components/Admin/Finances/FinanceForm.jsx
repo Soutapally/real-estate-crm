@@ -61,27 +61,27 @@ export default function FinanceForm() {
   e.preventDefault();
 
   const isEmployeeCategory =
-    form.category === "Salary" || form.category === "Incentives";
+  form.category === "Salary" || form.category === "Incentives";
 
-  const payload = {
-    type: form.type,
-    category: form.category,
+const payload = {
+  type: form.type,
+  category: form.category,
 
-    // 🔥 IMPORTANT
-    property_name: isEmployeeCategory ? null : form.property_name || null,
+  property_name: isEmployeeCategory ? null : form.property_name || null,
 
-    amount: Number(form.amount),
+  amount: Number(form.amount),
+  record_date: form.record_date,
+  notes: form.notes || null,
 
-    record_date: form.record_date,
+  employee_name: isEmployeeCategory
+    ? employees.find(e => e.user_id == form.employee_id)?.name
+    : null,
 
-    notes: form.notes || null,
+  employee_amount: isEmployeeCategory
+    ? Number(form.employee_amount)
+    : null
+};
 
-    employee_id: isEmployeeCategory ? Number(form.employee_id) : null,
-
-    employee_amount: isEmployeeCategory
-      ? Number(form.employee_amount)
-      : null
-  };
 
   const url = isEdit
     ? `${API_BASE_URL}/api/finance/${id}`
