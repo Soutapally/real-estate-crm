@@ -74,13 +74,14 @@ if (form.category === "Commission") {
 const payload = {
   type: form.type,
   category: form.category,
-  property_name: propertyNameToSend,
+  property_name: isEmployeeCategory ? null : form.property_name || null,
   amount: Number(form.amount),
-  record_date: form.record_date,
+  record_date: toISODate(form.record_date), // ✅ FIX
   notes: form.notes || null,
   employee_id: isEmployeeCategory ? Number(form.employee_id) : null,
   employee_amount: isEmployeeCategory ? Number(form.employee_amount) : null
 };
+
 
 
 
@@ -107,6 +108,17 @@ const payload = {
 
   const isEmployeeCategory =
     form.category === "Salary" || form.category === "Incentives";
+
+    const toISODate = (d) => {
+  if (!d) return null;
+
+  // already yyyy-mm-dd
+  if (/^\d{4}-\d{2}-\d{2}$/.test(d)) return d;
+
+  // convert dd-mm-yyyy → yyyy-mm-dd
+  const [dd, mm, yyyy] = d.split("-");
+  return `${yyyy}-${mm}-${dd}`;
+};
 
   return (
     <div className="layout-wrapper">
