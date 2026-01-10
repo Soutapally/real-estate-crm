@@ -188,9 +188,10 @@ const res = await fetch(`${API_BASE_URL}/api/sellers`);
 
                 <div>
                   <span className="seller-label">Seller Type:</span>
-                  <p className="seller-type">
-                    {s.seller_type || "N/A"}
-                  </p>
+                  {s.seller_type && s.seller_type !== "NULL" && (
+  <p className="seller-type">{s.seller_type}</p>
+)}
+
                 </div>
               </div>
 

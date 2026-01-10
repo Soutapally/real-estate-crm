@@ -38,21 +38,24 @@ export default function FinanceForm() {
 
     fetch(`${API_BASE_URL}/api/finance/${id}`)
       .then(res => res.json())
-      .then(data => {
-        setForm({
-          type: data.type || "Income",
-          category: data.category || "",
-          property_name: data.property_name || "",
-          amount: data.amount || "",
-          record_date: data.record_date
-            ? data.record_date.split("T")[0]
-            : "",
-          notes: data.notes || "",
-          employee_id: data.employee_id || "",
-          employee_amount: data.employee_amount || ""
-        });
-      });
-  }, [id, isEdit]);
+.then(data => {
+  setForm({
+    type: data.type || "Income",
+    category: data.category || "",
+    property_name: data.property_name || "",
+    amount: data.amount || "",
+    record_date: data.record_date
+      ? data.record_date.split("T")[0]
+      : "",
+    notes: data.notes || "",
+    employee_id: data.employee_id || "",
+    employee_amount: data.employee_amount || ""
+  });
+});
+
+
+
+  }, [id, isEdit, employees]);
 
   const handleChange = e =>
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -66,21 +69,14 @@ export default function FinanceForm() {
 const payload = {
   type: form.type,
   category: form.category,
-
   property_name: isEmployeeCategory ? null : form.property_name || null,
-
   amount: Number(form.amount),
   record_date: form.record_date,
   notes: form.notes || null,
-
-  employee_name: isEmployeeCategory
-    ? employees.find(e => e.user_id == form.employee_id)?.name
-    : null,
-
-  employee_amount: isEmployeeCategory
-    ? Number(form.employee_amount)
-    : null
+  employee_id: isEmployeeCategory ? Number(form.employee_id) : null,
+  employee_amount: isEmployeeCategory ? Number(form.employee_amount) : null
 };
+
 
 
   const url = isEdit
