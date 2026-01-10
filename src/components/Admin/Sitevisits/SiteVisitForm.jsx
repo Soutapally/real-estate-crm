@@ -31,6 +31,8 @@ export default function SiteVisitForm() {
   const [hour, setHour] = useState("12");
   const [minute, setMinute] = useState("00");
   const [meridiem, setMeridiem] = useState("AM");
+  const [timeTouched, setTimeTouched] = useState(false);
+
   const [followUpDate, setFollowUpDate] = useState("");
 
   const [rows, setRows] = useState(
@@ -51,83 +53,133 @@ export default function SiteVisitForm() {
   }, []);
 
   /* ================= PREFILL EDIT ================= */
-  useEffect(() => {
-    if (!isEdit) return;
+//   useEffect(() => {
+//     if (!isEdit) return;
 
-   fetch(`${API_BASE_URL}/api/site-visit-group/${id}`)
-      .then(res => res.json())
-      .then(rows => {
-        if (!rows.length) return;
+//    fetch(`${API_BASE_URL}/api/site-visit-group/${id}`)
+//       .then(res => res.json())
+//       .then(rows => {
+//         if (!rows.length) return;
 
-//         const first = rows[0];
-//         // const dt = new Date(first.visit_datetime);
-// const safe = first.visit_datetime.replace(" ", "T");
-// const dt = new Date(`${safe}+05:30`);
+// //         const first = rows[0];
+// //         // const dt = new Date(first.visit_datetime);
+// // const safe = first.visit_datetime.replace(" ", "T");
+// // const dt = new Date(`${safe}+05:30`);
 
-//         setCustomerId(first.customer_id);
-//         setVisitDate(dt.toISOString().split("T")[0]);
+// //         setCustomerId(first.customer_id);
+// //         setVisitDate(dt.toISOString().split("T")[0]);
 
-//         let h = dt.getHours();
-//         setMeridiem(h >= 12 ? "PM" : "AM");
-//         h = h % 12 || 12;
-//         setHour(h.toString());
-//         setMinute(dt.getMinutes().toString().padStart(2, "0"));
+// //         let h = dt.getHours();
+// //         setMeridiem(h >= 12 ? "PM" : "AM");
+// //         h = h % 12 || 12;
+// //         setHour(h.toString());
+// //         setMinute(dt.getMinutes().toString().padStart(2, "0"));
 
-//         if (first.followup_datetime) {
-//           setFollowUpDate(
-//             new Date(first.followup_datetime).toISOString().split("T")[0]
-//           );
-//         }
-const first = rows[0];
+// //         if (first.followup_datetime) {
+// //           setFollowUpDate(
+// //             new Date(first.followup_datetime).toISOString().split("T")[0]
+// //           );
+// //         }
+// const first = rows[0];
 
-setCustomerId(first.customer_id);
+// setCustomerId(first.customer_id);
 
-/* ✅ SAFE VISIT DATETIME PREFILL */
-if (first.visit_datetime) {
-  const [datePart, timePart] = first.visit_datetime.split(" ");
-  const [y, m, d] = datePart.split("-").map(Number);
-  const [hh, mm] = timePart.split(":").map(Number);
+// /* ✅ SAFE VISIT DATETIME PREFILL */
+// if (first.visit_datetime) {
+//   const [datePart, timePart] = first.visit_datetime.split(" ");
+//   const [y, m, d] = datePart.split("-").map(Number);
+//   const [hh, mm] = timePart.split(":").map(Number);
 
-  const dt = new Date(y, m - 1, d, hh, mm); // 👈 LOCAL TIME
+//   const dt = new Date(y, m - 1, d, hh, mm); // 👈 LOCAL TIME
 
-  setVisitDate(datePart);
+//   setVisitDate(datePart);
 
-  let h = dt.getHours();
-  setMeridiem(h >= 12 ? "PM" : "AM");
-  h = h % 12 || 12;
-  setHour(String(h));
-  setMinute(String(mm).padStart(2, "0"));
-}
+//   let h = dt.getHours();
+//   setMeridiem(h >= 12 ? "PM" : "AM");
+//   h = h % 12 || 12;
+//   setHour(String(h));
+//   setMinute(String(mm).padStart(2, "0"));
+// }
 
 
 
-/* ✅ SAFE FOLLOW-UP DATE PREFILL */
-if (first.followup_datetime) {
-  const safeFU = first.followup_datetime.replace(" ", "T");
-  const fdt = new Date(`${safeFU}+05:30`);
+// /* ✅ SAFE FOLLOW-UP DATE PREFILL */
+// if (first.followup_datetime) {
+//   const safeFU = first.followup_datetime.replace(" ", "T");
+//   const fdt = new Date(`${safeFU}+05:30`);
 
-  if (!isNaN(fdt.getTime())) {
-    setFollowUpDate(fdt.toISOString().split("T")[0]);
-  }
-}
+//   if (!isNaN(fdt.getTime())) {
+//     setFollowUpDate(fdt.toISOString().split("T")[0]);
+//   }
+// }
 
-        setRows(
-          rows.map(r => ({
-            property_id: r.property_id,
-            status: r.status,
-            feedback: r.feedback || ""
-          }))
-        );
-      });
-  }, [id, isEdit]);
+//         setRows(
+//           rows.map(r => ({
+//             property_id: r.property_id,
+//             status: r.status,
+//             feedback: r.feedback || ""
+//           }))
+//         );
+//       });
+//   }, [id, isEdit]);
+useEffect(() => {
+  if (!isEdit) return;
+
+  fetch(`${API_BASE_URL}/api/site-visit-group/${id}`)
+    .then(res => res.json())
+    .then(rows => {
+      if (!rows.length) return;
+
+      const first = rows[0];
+
+      setCustomerId(first.customer_id);
+
+      /* ✅ VISIT DATE */
+      const visitDateOnly = extractDateForInput(first.visit_datetime);
+      if (visitDateOnly) {
+        setVisitDate(visitDateOnly);
+
+        const [, timePart] = first.visit_datetime.split(" ");
+        if (timePart) {
+          let [hh, mm] = timePart.split(":").map(Number);
+
+          let mer = hh >= 12 ? "PM" : "AM";
+          hh = hh % 12 || 12;
+
+          setHour(String(hh));
+          setMinute(String(mm).padStart(2, "0"));
+          setMeridiem(mer);
+        }
+      }
+
+      /* ✅ FOLLOW-UP DATE */
+      const followupDateOnly = extractDateForInput(first.followup_datetime);
+      setFollowUpDate(followupDateOnly);
+
+      /* ✅ PROPERTIES */
+      setRows(
+        rows.map(r => ({
+          property_id: r.property_id,
+          status: r.status,
+          feedback: r.feedback || ""
+        }))
+      );
+    });
+}, [id, isEdit]);
 
   /* ================= HELPERS ================= */
   const buildDateTime = () => {
-    let h = parseInt(hour, 10);
-    if (meridiem === "PM" && h !== 12) h += 12;
-    if (meridiem === "AM" && h === 12) h = 0;
-    return `${visitDate} ${String(h).padStart(2, "0")}:${minute}:00`;
-  };
+  if (!timeTouched) {
+    return `${visitDate} 00:00:00`; // intentional no-time
+  }
+
+  let h = parseInt(hour, 10);
+  if (meridiem === "PM" && h !== 12) h += 12;
+  if (meridiem === "AM" && h === 12) h = 0;
+
+  return `${visitDate} ${String(h).padStart(2, "0")}:${minute}:00`;
+};
+
 
   const buildFollowupDateTime = () => {
     if (!followUpDate) return null;
@@ -145,6 +197,17 @@ if (first.followup_datetime) {
 
   const addRow = () => setRows([...rows, { ...EMPTY_ROW }]);
   const removeRow = (i) => setRows(rows.filter((_, idx) => idx !== i));
+
+
+const extractDateForInput = (dbValue) => {
+  if (!dbValue || typeof dbValue !== "string") return "";
+
+  // expected: "YYYY-MM-DD HH:mm:ss"
+  const parts = dbValue.split(" ");
+  if (parts.length < 1) return "";
+
+  return parts[0]; // ✅ "YYYY-MM-DD"
+};
 
   /* ================= SUBMIT ================= */
   const handleSubmit = async (e) => {
@@ -211,20 +274,41 @@ if (first.followup_datetime) {
 
               <label>Visit Time</label>
               <div className="time-row">
-                <select value={hour} onChange={e => setHour(e.target.value)}>
+                {/* <select value={hour} onChange={e => setHour(e.target.value)}> */}
+                <select
+  value={hour}
+  onChange={e => {
+    setHour(e.target.value);
+    setTimeTouched(true); // 👈 add this
+  }}
+>
                   {[...Array(12)].map((_, i) => (
                     <option key={i + 1}>{i + 1}</option>
                   ))}
                 </select>
 
-                <select value={minute} onChange={e => setMinute(e.target.value)}>
+                {/* <select value={minute} onChange={e => setMinute(e.target.value)}> */}
+                <select
+  value={minute}
+  onChange={e => {
+    setMinute(e.target.value);
+    setTimeTouched(true); // 👈 add this
+  }}
+>
                   {[...Array(60)].map((_, i) => {
                     const v = String(i).padStart(2, "0");
                     return <option key={v}>{v}</option>;
                   })}
                 </select>
 
-                <select value={meridiem} onChange={e => setMeridiem(e.target.value)}>
+                {/* <select value={meridiem} onChange={e => setMeridiem(e.target.value)}> */}
+                <select
+  value={meridiem}
+  onChange={e => {
+    setMeridiem(e.target.value);
+    setTimeTouched(true); // 👈 add this
+  }}
+>
                   <option>AM</option>
                   <option>PM</option>
                 </select>

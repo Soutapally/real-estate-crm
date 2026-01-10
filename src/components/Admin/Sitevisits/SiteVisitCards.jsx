@@ -81,14 +81,20 @@ const formatDate = (dt) => {
 
 const formatTime = (dt) => {
   const d = parseDBTimestamp(dt);
-  return d
-    ? d.toLocaleTimeString("en-IN", {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true, // ✅ 24h → 12h AM/PM
-      })
-    : "—";
+  if (!d) return "—";
+
+  // 🚨 Treat 00:00 as "no time entered"
+  if (d.getHours() === 0 && d.getMinutes() === 0) {
+    return "—";
+  }
+
+  return d.toLocaleTimeString("en-IN", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
 };
+
 
 
   return (
