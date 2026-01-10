@@ -48,14 +48,29 @@ const res = await fetch(`${API_BASE_URL}/api/site-visits`);
   //     minute: "2-digit",
   //     hour12: true,
   //   });
+// const parseDBTimestamp = (value) => {
+//   if (!value) return null;
+
+//   const [datePart, timePart] = value.split(" ");
+//   const [y, m, d] = datePart.split("-").map(Number);
+//   const [hh, mm] = timePart.split(":").map(Number);
+
+//   return new Date(y, m - 1, d, hh, mm); // 👈 LOCAL
+// };
 const parseDBTimestamp = (value) => {
-  if (!value) return null;
+  if (!value || typeof value !== "string" || !value.includes(" ")) {
+    return null;
+  }
 
   const [datePart, timePart] = value.split(" ");
+  if (!datePart || !timePart) return null;
+
   const [y, m, d] = datePart.split("-").map(Number);
   const [hh, mm] = timePart.split(":").map(Number);
 
-  return new Date(y, m - 1, d, hh, mm); // 👈 LOCAL
+  if ([y, m, d, hh, mm].some(isNaN)) return null;
+
+  return new Date(y, m - 1, d, hh, mm);
 };
 
 
