@@ -53,8 +53,6 @@ export default function FinanceForm() {
   });
 });
 
-
-
   }, [id, isEdit, employees]);
 
   const handleChange = e =>
@@ -66,10 +64,17 @@ export default function FinanceForm() {
   const isEmployeeCategory =
   form.category === "Salary" || form.category === "Incentives";
 
+let propertyNameToSend = null;
+
+if (form.category === "Commission") {
+  propertyNameToSend = form.property_name?.trim() || "";
+} else if (!isEmployeeCategory) {
+  propertyNameToSend = form.property_name?.trim() || null;
+}
 const payload = {
   type: form.type,
   category: form.category,
-  property_name: isEmployeeCategory ? null : form.property_name || null,
+  property_name: propertyNameToSend,
   amount: Number(form.amount),
   record_date: form.record_date,
   notes: form.notes || null,
@@ -171,14 +176,21 @@ const payload = {
             )}
 
             {/* PROPERTY */}
-            {!isEmployeeCategory && (
-              <input
-                name="property_name"
-                placeholder="Property Name"
-                value={form.property_name}
-                onChange={handleChange}
-              />
-            )}
+           {!isEmployeeCategory && (
+  <input
+  name="property_name"
+  placeholder={
+    form.category === "Commission"
+      ? "Property Name (required)"
+      : "Property Name (optional)"
+  }
+  value={form.property_name}
+  onChange={handleChange}
+  required={form.category === "Commission"}
+/>
+
+)}
+
 
             {/* TOTAL */}
             <input
