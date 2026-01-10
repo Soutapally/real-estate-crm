@@ -122,6 +122,26 @@ export default function SiteVisitForm() {
 //         );
 //       });
 //   }, [id, isEdit]);
+
+useEffect(() => {
+  if (!isEdit || !location.state?.visit_datetime) return;
+
+  const d = new Date(location.state.visit_datetime);
+  if (isNaN(d.getTime())) return;
+
+  setVisitDate(d.toISOString().slice(0, 10));
+
+  // set time only if real time exists
+  if (!(d.getHours() === 0 && d.getMinutes() === 0)) {
+    let h = d.getHours();
+    setMeridiem(h >= 12 ? "PM" : "AM");
+    h = h % 12 || 12;
+    setHour(String(h));
+    setMinute(String(d.getMinutes()).padStart(2, "0"));
+    setTimeTouched(true);
+  }
+}, [isEdit, location.state]);
+
 useEffect(() => {
   if (!isEdit) return;
 
@@ -134,29 +154,28 @@ useEffect(() => {
 
       setCustomerId(first.customer_id);
 
-      /* ✅ VISIT DATE */
+      // ✅ VISIT DATE
       const visitDateOnly = extractDateForInput(first.visit_datetime);
-      if (visitDateOnly) {
-        setVisitDate(visitDateOnly);
+      setVisitDate(visitDateOnly);
 
-        const [, timePart] = first.visit_datetime.split(" ");
-        if (timePart) {
-          let [hh, mm] = timePart.split(":").map(Number);
-
-          let mer = hh >= 12 ? "PM" : "AM";
-          hh = hh % 12 || 12;
-
-          setHour(String(hh));
-          setMinute(String(mm).padStart(2, "0"));
-          setMeridiem(mer);
+      // ✅ TIME (mark as touched only if real time exists)
+      if (first.visit_datetime) {
+        const d = new Date(first.visit_datetime);
+        if (!isNaN(d.getTime()) && !(d.getHours() === 0 && d.getMinutes() === 0)) {
+          let h = d.getHours();
+          setMeridiem(h >= 12 ? "PM" : "AM");
+          h = h % 12 || 12;
+          setHour(String(h));
+          setMinute(String(d.getMinutes()).padStart(2, "0"));
+          setTimeTouched(true); // 🔴 THIS WAS MISSING
         }
       }
 
-      /* ✅ FOLLOW-UP DATE */
+      // ✅ FOLLOW-UP DATE
       const followupDateOnly = extractDateForInput(first.followup_datetime);
       setFollowUpDate(followupDateOnly);
 
-      /* ✅ PROPERTIES */
+      // ✅ PROPERTIES
       setRows(
         rows.map(r => ({
           property_id: r.property_id,
@@ -166,6 +185,7 @@ useEffect(() => {
       );
     });
 }, [id, isEdit]);
+
 
   /* ================= HELPERS ================= */
   const buildDateTime = () => {
@@ -197,17 +217,22 @@ useEffect(() => {
 
   const addRow = () => setRows([...rows, { ...EMPTY_ROW }]);
   const removeRow = (i) => setRows(rows.filter((_, idx) => idx !== i));
+  
+const extractDateForInput = (value) => {
+  if (!value) return "";
 
+  // If already YYYY-MM-DD
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    return value;
+  }
 
-const extractDateForInput = (dbValue) => {
-  if (!dbValue || typeof dbValue !== "string") return "";
+  // If ISO or "YYYY-MM-DD HH:mm:ss"
+  const d = new Date(value);
+  if (isNaN(d.getTime())) return "";
 
-  // expected: "YYYY-MM-DD HH:mm:ss"
-  const parts = dbValue.split(" ");
-  if (parts.length < 1) return "";
-
-  return parts[0]; // ✅ "YYYY-MM-DD"
+  return d.toISOString().slice(0, 10); // ✅ YYYY-MM-DD ONLY
 };
+
 
   /* ================= SUBMIT ================= */
   const handleSubmit = async (e) => {

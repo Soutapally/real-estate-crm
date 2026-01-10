@@ -67,20 +67,41 @@ const res = await fetch(`${API_BASE_URL}/api/edit-sale/${id}`);
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-const url = isEdit
-  ? `${API_BASE_URL}/api/update-sale/${id}`
-  : `${API_BASE_URL}/api/add-sale`;
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+// const url = isEdit
+//   ? `${API_BASE_URL}/api/update-sale/${id}`
+//   : `${API_BASE_URL}/api/add-sale`;
 
-    await fetch(url, {
-      method: isEdit ? "PUT" : "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form)
-    });
+//     await fetch(url, {
+//       method: isEdit ? "PUT" : "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify(form)
+//     });
 
-    navigate("/sales");
+//     navigate("/sales");
+//   };
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  const payload = {
+    ...form,
+    commission_amount:
+      form.commission_amount === "" ? null : form.commission_amount
   };
+
+  const url = isEdit
+    ? `${API_BASE_URL}/api/update-sale/${id}`
+    : `${API_BASE_URL}/api/add-sale`;
+
+  await fetch(url, {
+    method: isEdit ? "PUT" : "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  });
+
+  navigate("/sales");
+};
 
   return (
     <div className="layout-wrapper">

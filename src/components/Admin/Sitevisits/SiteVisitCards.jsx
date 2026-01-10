@@ -138,13 +138,18 @@ const formatTime = (dt) => {
                     <h3>{visit.customer_name}</h3>
 
                     <div className="sv-actions">
-                      <EditButton
-                        label="Edit"
-                        width="80px"
-                        onClick={() =>
-                          navigate(`/edit-site-visit/${visit.visit_id}`)
-                        }
-                      />
+                     <EditButton
+  label="Edit"
+  width="80px"
+  onClick={() =>
+    navigate(`/edit-site-visit/${visit.visit_id}`, {
+      state: {
+        visit_datetime: visit.visit_datetime
+      }
+    })
+  }
+/>
+
                       <DeleteButton
                         label="Delete"
                         width="80px"
