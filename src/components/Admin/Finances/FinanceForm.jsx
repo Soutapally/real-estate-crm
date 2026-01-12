@@ -74,16 +74,30 @@ if (form.category === "Commission") {
 const payload = {
   type: form.type,
   category: form.category,
-  property_name: isEmployeeCategory ? null : form.property_name || null,
-  amount: Number(form.amount),
-  record_date: toISODate(form.record_date), // ✅ FIX
-  notes: form.notes || null,
-  employee_id: isEmployeeCategory ? Number(form.employee_id) : null,
-  employee_amount: isEmployeeCategory ? Number(form.employee_amount) : null
+
+  property_name:
+    form.category === "Commission"
+      ? form.property_name.trim()
+      : isEmployeeCategory
+      ? null
+      : form.property_name?.trim() || null,
+
+  amount: isEmployeeCategory
+    ? Number(form.employee_amount)
+    : Number(form.amount),
+
+  record_date: toISODate(form.record_date),
+
+  notes: form.notes?.trim() || null,
+
+  employee_id: isEmployeeCategory
+    ? Number(form.employee_id)
+    : null,
+
+  employee_amount: isEmployeeCategory
+    ? Number(form.employee_amount)
+    : null
 };
-
-
-
 
   const url = isEdit
     ? `${API_BASE_URL}/api/finance/${id}`
@@ -119,6 +133,7 @@ const payload = {
   const [dd, mm, yyyy] = d.split("-");
   return `${yyyy}-${mm}-${dd}`;
 };
+
 
   return (
     <div className="layout-wrapper">
@@ -160,7 +175,7 @@ const payload = {
             </select>
 
             {/* EMPLOYEE FIELDS */}
-            {isEmployeeCategory && (
+            {/* {isEmployeeCategory && (
               <>
                 <select
                   name="employee_id"
@@ -185,34 +200,61 @@ const payload = {
                   required
                 />
               </>
-            )}
+            )} */}
+{isEmployeeCategory && (
+  <>
+    <select
+      name="employee_id"
+      value={form.employee_id}
+      onChange={handleChange}
+      required
+    >
+      <option value="">Select Employee</option>
+      {employees.map(emp => (
+        <option key={emp.user_id} value={emp.user_id}>
+          {emp.name}
+        </option>
+      ))}
+    </select>
 
-            {/* PROPERTY */}
-           {!isEmployeeCategory && (
-  <input
-  name="property_name"
-  placeholder={
-    form.category === "Commission"
-      ? "Property Name (required)"
-      : "Property Name (optional)"
-  }
-  value={form.property_name}
-  onChange={handleChange}
-  required={form.category === "Commission"}
-/>
-
+    <input
+      type="number"
+      name="employee_amount"
+      placeholder="Employee Amount"
+      value={form.employee_amount}
+      onChange={handleChange}
+      required
+    />
+  </>
 )}
 
+            {/* PROPERTY */}
+          {!isEmployeeCategory && (
+  <input
+    name="property_name"
+    placeholder={
+      form.category === "Commission"
+        ? "Property Name (required)"
+        : "Property Name (optional)"
+    }
+    value={form.property_name}
+    onChange={handleChange}
+    required={form.category === "Commission"}
+  />
+)}
 
             {/* TOTAL */}
-            <input
-              type="number"
-              name="amount"
-              placeholder="Total Amount"
-              value={form.amount}
-              onChange={handleChange}
-              required
-            />
+           {!isEmployeeCategory && (
+  <input
+    type="number"
+    name="amount"
+    placeholder="Total Amount"
+    value={form.amount}
+    onChange={handleChange}
+    required
+  />
+)}
+
 
             {/* DATE */}
             <input
