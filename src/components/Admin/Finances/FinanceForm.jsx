@@ -62,136 +62,48 @@ export default function FinanceForm() {
 
 const handleSubmit = async (e) => {
   e.preventDefault();
-  console.log("========== FORM SUBMIT START ==========");
-console.log("Form state:", form);
-  
+
   const isEmployeeCategory = form.category === "Salary" || form.category === "Incentives";
-  console.log("isEmployeeCategory:", isEmployeeCategory);
-  console.log("Category:", form.category);
 
-
-  // Prepare the payload
-  // const payload = {
-  //   type: form.type,
-  //   category: form.category,
-    
-  //   // Property name logic
-  //   property_name: form.category === "Commission"
-  //     ? form.property_name?.trim() || ""
-  //     : isEmployeeCategory
-  //       ? null
-  //       : form.property_name?.trim() || null,
-    
-  //   // Amount logic
-  //   amount: isEmployeeCategory
-  //     ? Number(form.employee_amount)
-  //     : Number(form.amount),
-    
-  //   // Date - convert to ISO format
-  //   record_date: toISODate(form.record_date),
-    
-  //   // Notes
-  //   notes: form.notes?.trim() || null,
-    
-  //   // Employee fields
-  //   employee_id: isEmployeeCategory
-  //     ? Number(form.employee_id)
-  //     : null,
-    
-  //   employee_amount: isEmployeeCategory
-  //     ? Number(form.employee_amount)
-  //     : null
-  // };
- const payload = {
+  // Build payload with ALL fields (some will be null)
+  const payload = {
     type: form.type,
     category: form.category,
+    record_date: form.record_date,
+    notes: form.notes?.trim() || null,
     
-    // Property name logic
-    property_name: (() => {
-      let value;
-      if (form.category === "Commission") {
-        value = form.property_name?.trim() || "";
-        console.log("Property name (Commission):", value);
-      } else if (isEmployeeCategory) {
-        value = null;
-        console.log("Property name (Employee category):", value);
-      } else {
-        value = form.property_name?.trim() || null;
-        console.log("Property name (Other):", value);
-      }
-      return value;
-    })(),
-    
-    // Amount logic
-    amount: (() => {
-      let value;
-      if (isEmployeeCategory) {
-        value = Number(form.employee_amount);
-        console.log("Amount (from employee_amount):", value, "Raw:", form.employee_amount);
-      } else {
-        value = Number(form.amount);
-        console.log("Amount (from amount):", value, "Raw:", form.amount);
-      }
-      return value;
-    })(),
-    
-    // Date
-    record_date: (() => {
-      const date = toISODate(form.record_date);
-      console.log("Record date:", date, "Raw:", form.record_date);
-      return date;
-    })(),
-    
-    // Notes
-    notes: (() => {
-      const notes = form.notes?.trim() || null;
-      console.log("Notes:", notes);
-      return notes;
-    })(),
-    
-    // Employee fields
-    employee_id: (() => {
-      const id = isEmployeeCategory ? Number(form.employee_id) : null;
-      console.log("Employee ID:", id, "Raw:", form.employee_id);
-      return id;
-    })(),
-    
-    employee_amount: (() => {
-      const amount = isEmployeeCategory ? Number(form.employee_amount) : null;
-      console.log("Employee amount:", amount, "Raw:", form.employee_amount);
-      return amount;
-    })()
+    // Initialize all fields
+    property_name: null,
+    amount: 0,
+    employee_id: null,
+    employee_amount: null
   };
-  console.log("Sending payload:", payload);
-  console.log("Sending payload:", payload);
-console.log("Payload JSON:", JSON.stringify(payload)); // Debug log
 
-  // Send request
-  const url = isEdit
-    ? `${API_BASE_URL}/api/finance/${id}`
-    : `${API_BASE_URL}/api/add-finance`;
-
-  try {
-    const res = await fetch(url, {
-      method: isEdit ? "PUT" : "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
-
-    const responseData = await res.json();
- console.log("Response data:", responseData);
-
-    if (!res.ok) {
-      alert(responseData.message || "Save failed");
-      return;
-    }
-
-    alert(responseData.message || "Success!");
-    navigate("/finances");
-  } catch (err) {
-    console.error("Network error:", err);
-    alert("Network error. Please check console.");
+  // Set values based on category
+  if (isEmployeeCategory) {
+    // For Salary/Incentives
+    payload.property_name = null;  // Explicitly null
+    payload.amount = Number(form.employee_amount);  // amount comes from employee_amount
+    payload.employee_id = form.employee_id ? Number(form.employee_id) : null;
+    payload.employee_amount = form.employee_amount ? Number(form.employee_amount) : null;
+  } else if (form.category === "Commission") {
+    // For Commission
+    payload.property_name = form.property_name?.trim() || null;
+    payload.amount = Number(form.amount);
+    payload.employee_id = null;  // Explicitly null
+    payload.employee_amount = null;  // Explicitly null
+  } else {
+    // For other categories (Travel, Promotions, etc.)
+    payload.property_name = form.property_name?.trim() || null;
+    payload.amount = Number(form.amount);
+    payload.employee_id = null;  // Explicitly null
+    payload.employee_amount = null;  // Explicitly null
   }
+
+  console.log("Sending payload:", payload);
+  console.log("Payload JSON:", JSON.stringify(payload));
+  
+  // Rest of your submit code...
 };
 
 
