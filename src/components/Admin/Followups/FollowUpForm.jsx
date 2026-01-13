@@ -79,16 +79,29 @@ export default function FollowUpForm() {
 
 /* EDIT MODE */
 /* EDIT MODE */
+/* EDIT MODE */
 useEffect(() => {
   if (!isEdit) return;
 
   fetch(`${API_BASE_URL}/api/edit-followup/${id}`)
     .then(res => res.json())
     .then(data => {
-      if (!data) return;
+      console.log("Edit mode data received:", data); // Add for debugging
+      
+      if (!data || !data.next_followup_at) {
+        console.error("No data or missing next_followup_at");
+        return;
+      }
 
       // Parse PostgreSQL timestamp "YYYY-MM-DD HH:mm:ss"
       const [datePart, timePart] = data.next_followup_at.split(' ');
+      
+      // Check if split worked
+      if (!datePart || !timePart) {
+        console.error("Invalid timestamp format:", data.next_followup_at);
+        return;
+      }
+      
       const [year, month, day] = datePart.split('-');
       const [hours24, minutes] = timePart.split(':');
       
@@ -103,16 +116,19 @@ useEffect(() => {
       if (hours12 === 0) hours12 = 12;
       
       setForm({
-        customer_id: String(data.customer_id),
-        property_ids: data.property_ids.map(String),
+        customer_id: String(data.customer_id || ""),
+        property_ids: data.property_ids ? data.property_ids.map(String) : [],
         followup_date: `${year}-${month}-${day}`,
         hour: String(hours12),
-        minute: minutes,
+        minute: minutes || "00",
         meridiem: meridiem,
         status: data.status || "",
         notes: data.notes || "",
         showPropertyDropdown: false
       });
+    })
+    .catch(err => {
+      console.error("Error loading followup data:", err);
     });
 }, [id, isEdit]);
 
@@ -141,6 +157,12 @@ useEffect(() => {
   };
 
 const buildDateTime = () => {
+  // Add validation
+  if (!form.hour || !form.minute || !form.followup_date) {
+    console.error("Missing time/date fields");
+    return null;
+  }
+  
   let h = parseInt(form.hour, 10);
   
   // Convert 12-hour to 24-hour format
@@ -155,27 +177,44 @@ const buildDateTime = () => {
   return `${form.followup_date} ${hour24}:${minute24}:00`;
 };
 
-  const handleSubmit = async e => {
-    e.preventDefault();
-    if (submitting) return;
-    setSubmitting(true);
+const handleSubmit = async e => {
+  e.preventDefault();
+  if (submitting) return;
+  setSubmitting(true);
 
-    await fetch(
-  isEdit
-    ? `${API_BASE_URL}/api/update-followup/${id}`
-    : `${API_BASE_URL}/api/add-followup`,
+  const nextFollowupAt = buildDateTime();
+  
+  // Validate datetime
+  if (!nextFollowupAt) {
+    alert("Please fill all date and time fields");
+    setSubmitting(false);
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      isEdit
+        ? `${API_BASE_URL}/api/update-followup/${id}`
+        : `${API_BASE_URL}/api/add-followup`,
       {
         method: isEdit ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           customer_id: Number(form.customer_id),
           property_ids: form.property_ids.map(Number),
-          next_followup_at: buildDateTime(),
+          next_followup_at: nextFollowupAt,
           status: form.status,
           notes: form.notes
         })
       }
     );
+
+    if (!response.ok) {
+      const error = await response.json();
+      alert(error.message || "Failed to save followup");
+      setSubmitting(false);
+      return;
+    }
 
     if (isEdit) {
       setUpdated(true);
@@ -184,8 +223,15 @@ const buildDateTime = () => {
     }
 
     setForm(INITIAL_FORM);
+    alert("Follow-up saved successfully!");
+    
+  } catch (err) {
+    console.error("Submit error:", err);
+    alert("Network error. Please try again.");
+  } finally {
     setSubmitting(false);
-  };
+  }
+};
 
   if (updated) return null;
 

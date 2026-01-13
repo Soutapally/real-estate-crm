@@ -33,22 +33,36 @@ export default function FollowUpCards() {
 /* ================= DATE NORMALIZATION ================= */
 
 const parsePostgresTimestamp = (value) => {
-  if (!value) return null;
+  if (!value) {
+    console.warn("parsePostgresTimestamp received null/undefined");
+    return null;
+  }
+  
+  // Check if value is a string
+  if (typeof value !== 'string') {
+    console.warn("parsePostgresTimestamp expected string, got:", typeof value, value);
+    return null;
+  }
   
   // PostgreSQL stores timestamp without timezone: "YYYY-MM-DD HH:mm:ss"
-  // Treat it as LOCAL time (not UTC)
   const [datePart, timePart] = value.split(' ');
-  if (!datePart || !timePart) return null;
+  
+  if (!datePart || !timePart) {
+    console.warn("Invalid timestamp format:", value);
+    return null;
+  }
   
   // Create local date object
-  // Use "YYYY-MM-DDTHH:mm:ss" format
   const isoString = `${datePart}T${timePart}`;
   const d = new Date(isoString);
   
-  // ✅ NO timezone adjustment - treat as local time as stored
-  return isNaN(d.getTime()) ? null : d;
+  if (isNaN(d.getTime())) {
+    console.warn("Invalid date created from:", isoString);
+    return null;
+  }
+  
+  return d;
 };
-
 // ✅ normalizeDate should also use local time
 const normalizeDate = (dt) => {
   const d = parsePostgresTimestamp(dt);

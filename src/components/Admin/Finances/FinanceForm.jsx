@@ -39,6 +39,8 @@ export default function FinanceForm() {
     fetch(`${API_BASE_URL}/api/finance/${id}`)
       .then(res => res.json())
 .then(data => {
+        console.log("Loaded data for ID", id, ":", data); // Add this line
+
   setForm({
     type: data.type || "Income",
     category: data.category || "",
