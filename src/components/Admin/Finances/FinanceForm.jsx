@@ -62,50 +62,113 @@ export default function FinanceForm() {
 
 const handleSubmit = async (e) => {
   e.preventDefault();
-
+  
+  console.log("========== FORM SUBMIT START ==========");
+  console.log("Form state:", form);
+  
   const isEmployeeCategory = form.category === "Salary" || form.category === "Incentives";
+  console.log("isEmployeeCategory:", isEmployeeCategory);
+  console.log("Category:", form.category);
 
   // Build payload with ALL fields (some will be null)
   const payload = {
     type: form.type,
     category: form.category,
-    record_date: form.record_date,
-    notes: form.notes?.trim() || null,
     
-    // Initialize all fields
+    // Default all optional fields to null
     property_name: null,
     amount: 0,
     employee_id: null,
-    employee_amount: null
+    employee_amount: null,
+    notes: form.notes?.trim() || null
   };
 
   // Set values based on category
   if (isEmployeeCategory) {
+    console.log("Processing Employee Category (Salary/Incentives)");
+    
     // For Salary/Incentives
     payload.property_name = null;  // Explicitly null
-    payload.amount = Number(form.employee_amount);  // amount comes from employee_amount
+    payload.amount = form.employee_amount ? Number(form.employee_amount) : 0;
     payload.employee_id = form.employee_id ? Number(form.employee_id) : null;
     payload.employee_amount = form.employee_amount ? Number(form.employee_amount) : null;
+    
+    console.log("Employee Amount:", payload.employee_amount);
+    console.log("Employee ID:", payload.employee_id);
+    
   } else if (form.category === "Commission") {
+    console.log("Processing Commission Category");
+    
     // For Commission
     payload.property_name = form.property_name?.trim() || null;
-    payload.amount = Number(form.amount);
+    payload.amount = form.amount ? Number(form.amount) : 0;
     payload.employee_id = null;  // Explicitly null
     payload.employee_amount = null;  // Explicitly null
+    
+    console.log("Property Name:", payload.property_name);
+    console.log("Amount:", payload.amount);
+    
   } else {
+    console.log("Processing Other Category (Travel, Promotions, etc.)");
+    
     // For other categories (Travel, Promotions, etc.)
     payload.property_name = form.property_name?.trim() || null;
-    payload.amount = Number(form.amount);
+    payload.amount = form.amount ? Number(form.amount) : 0;
     payload.employee_id = null;  // Explicitly null
     payload.employee_amount = null;  // Explicitly null
+    
+    console.log("Property Name:", payload.property_name);
+    console.log("Amount:", payload.amount);
   }
 
-  console.log("Sending payload:", payload);
-  console.log("Payload JSON:", JSON.stringify(payload));
-  
-  // Rest of your submit code...
-};
+  // Add record date (already in yyyy-mm-dd format from input type="date")
+  payload.record_date = form.record_date;
+  console.log("Record Date:", payload.record_date);
 
+  // Log final payload
+  console.log("========== FINAL PAYLOAD ==========");
+  console.log("Payload object:", payload);
+  console.log("Payload JSON:", JSON.stringify(payload));
+
+  // Send request
+  const url = isEdit
+    ? `${API_BASE_URL}/api/finance/${id}`
+    : `${API_BASE_URL}/api/add-finance`;
+  
+  console.log("URL:", url);
+  console.log("Method:", isEdit ? "PUT" : "POST");
+
+  try {
+    console.log("========== SENDING REQUEST ==========");
+    const res = await fetch(url, {
+      method: isEdit ? "PUT" : "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    console.log("Response status:", res.status);
+    console.log("Response OK:", res.ok);
+
+    const responseData = await res.json();
+    console.log("Response data:", responseData);
+
+    if (!res.ok) {
+      console.error("❌ API Error:", responseData);
+      alert(responseData.message || `Save failed (Status: ${res.status})`);
+      return;
+    }
+
+    console.log("✅ Success! Response:", responseData);
+    alert(responseData.message || "Success!");
+    navigate("/finances");
+    
+  } catch (err) {
+    console.error("❌ Network/Fetch error:", err);
+    alert("Network error. Check console for details.");
+  }
+  
+  console.log("========== FORM SUBMIT END ==========");
+};
 
 
   const isEmployeeCategory =
