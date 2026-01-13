@@ -78,17 +78,18 @@ export default function FollowUpForm() {
 
 
 /* EDIT MODE */
+/* EDIT MODE */
 useEffect(() => {
   if (!isEdit) return;
 
   fetch(`${API_BASE_URL}/api/edit-followup/${id}`)
     .then(res => res.json())
     .then(data => {
-      // ❌ REMOVED +05:30
+      if (!data) return;
+
+      // convert "YYYY-MM-DD HH:mm:ss" → local Date
       const safe = data.next_followup_at.replace(" ", "T");
       const dt = new Date(safe);
-
-      if (isNaN(dt.getTime())) return;
 
       let h = dt.getHours();
       let mer = "AM";
@@ -112,6 +113,7 @@ useEffect(() => {
       });
     });
 }, [id, isEdit]);
+
 
   /* CLOSE PROPERTY DROPDOWN */
   useEffect(() => {
