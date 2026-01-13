@@ -87,26 +87,28 @@ useEffect(() => {
     .then(data => {
       if (!data) return;
 
-      // convert "YYYY-MM-DD HH:mm:ss" → local Date
-      const safe = data.next_followup_at.replace(" ", "T");
-      const dt = new Date(safe);
-
-      let h = dt.getHours();
-      let mer = "AM";
-
-      if (h >= 12) {
-        mer = "PM";
-        if (h > 12) h -= 12;
+      // Parse PostgreSQL timestamp "YYYY-MM-DD HH:mm:ss"
+      const [datePart, timePart] = data.next_followup_at.split(' ');
+      const [year, month, day] = datePart.split('-');
+      const [hours24, minutes] = timePart.split(':');
+      
+      // Convert 24-hour to 12-hour for form display
+      let hours12 = parseInt(hours24, 10);
+      let meridiem = "AM";
+      
+      if (hours12 >= 12) {
+        meridiem = "PM";
+        if (hours12 > 12) hours12 -= 12;
       }
-      if (h === 0) h = 12;
-
+      if (hours12 === 0) hours12 = 12;
+      
       setForm({
         customer_id: String(data.customer_id),
         property_ids: data.property_ids.map(String),
-        followup_date: dt.toISOString().split("T")[0],
-        hour: String(h),
-        minute: String(dt.getMinutes()).padStart(2, "0"),
-        meridiem: mer,
+        followup_date: `${year}-${month}-${day}`,
+        hour: String(hours12),
+        minute: minutes,
+        meridiem: meridiem,
         status: data.status || "",
         notes: data.notes || "",
         showPropertyDropdown: false
@@ -138,12 +140,20 @@ useEffect(() => {
     }));
   };
 
-  const buildDateTime = () => {
-    let h = parseInt(form.hour, 10);
-    if (form.meridiem === "PM" && h !== 12) h += 12;
-    if (form.meridiem === "AM" && h === 12) h = 0;
-    return `${form.followup_date} ${String(h).padStart(2, "0")}:${form.minute}:00`;
-  };
+const buildDateTime = () => {
+  let h = parseInt(form.hour, 10);
+  
+  // Convert 12-hour to 24-hour format
+  if (form.meridiem === "PM" && h !== 12) h += 12;
+  if (form.meridiem === "AM" && h === 12) h = 0;
+  
+  // Pad hour and minute to 2 digits
+  const hour24 = String(h).padStart(2, "0");
+  const minute24 = String(form.minute).padStart(2, "0");
+  
+  // Return in PostgreSQL format: "YYYY-MM-DD HH:MM:SS"
+  return `${form.followup_date} ${hour24}:${minute24}:00`;
+};
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -292,21 +302,22 @@ useEffect(() => {
                 </select>
 
                 <select
-                  className="followup-input"
-                  name="minute"
-                  value={form.minute}
-                  onChange={handleChange}
-                  required
-                >
-                  {[...Array(60)].map((_, i) => {
-                    const v = String(i).padStart(2, "0");
-                    return (
-                      <option key={v} value={v}>
-                        {v}
-                      </option>
-                    );
-                  })}
-                </select>
+  className="followup-input"
+  name="minute"
+  value={form.minute}
+  onChange={handleChange}
+  required
+>
+  <option value="">MM</option>
+  {[...Array(60)].map((_, i) => {
+    const v = String(i).padStart(2, "0");
+    return (
+      <option key={v} value={v}>
+        {v}
+      </option>
+    );
+  })}
+</select>
 
                 <select
                   className="followup-input"

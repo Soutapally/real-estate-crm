@@ -30,34 +30,57 @@ export default function FollowUpCards() {
   /* ================= DATE NORMALIZATION ================= */
 
   // ✅ SAME FUNCTION, ONLY TIMEZONE FIXED
-  const parsePostgresTimestamp = (value) => {
-    if (!value) return null;
+/* ================= DATE NORMALIZATION ================= */
 
-    // Postgres: "YYYY-MM-DD HH:mm:ss"
-    const safe = value.replace(" ", "T");
-    const d = new Date(safe); // ❌ NO +05:30
-    return isNaN(d.getTime()) ? null : d;
-  };
+const parsePostgresTimestamp = (value) => {
+  if (!value) return null;
+  
+  // PostgreSQL stores timestamp without timezone: "YYYY-MM-DD HH:mm:ss"
+  // Treat it as LOCAL time (not UTC)
+  const [datePart, timePart] = value.split(' ');
+  if (!datePart || !timePart) return null;
+  
+  // Create local date object
+  // Use "YYYY-MM-DDTHH:mm:ss" format
+  const isoString = `${datePart}T${timePart}`;
+  const d = new Date(isoString);
+  
+  // ✅ NO timezone adjustment - treat as local time as stored
+  return isNaN(d.getTime()) ? null : d;
+};
 
-  // ✅ SAME normalizeDate logic (DO NOT TOUCH)
-  const normalizeDate = (dt) => {
-    const d = parsePostgresTimestamp(dt);
-    if (!d) return null;
-    d.setHours(0, 0, 0, 0);
-    return d.getTime();
-  };
+// ✅ normalizeDate should also use local time
+const normalizeDate = (dt) => {
+  const d = parsePostgresTimestamp(dt);
+  if (!d) return null;
+  
+  // Create a new date at midnight LOCAL time
+  const midnight = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  return midnight.getTime();
+};
 
-  // ✅ SAME formatter, just correct AM/PM
-  const formatFollowupTime = (dt) => {
-    const d = parsePostgresTimestamp(dt);
-    if (!d) return "—";
-
-    return d.toLocaleString("en-IN", {
-      dateStyle: "medium",
-      timeStyle: "short", // AM / PM
-    });
-  };
-
+// ✅ formatFollowupTime - CORRECTED
+const formatFollowupTime = (dt) => {
+  const d = parsePostgresTimestamp(dt);
+  if (!d) return "—";
+  
+  // Format date in local time
+  const dateStr = d.toLocaleDateString('en-IN', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  });
+  
+  // Format time in 12-hour format
+  let hours = d.getHours();
+  const minutes = d.getMinutes().toString().padStart(2, '0');
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  
+  hours = hours % 12;
+  hours = hours ? hours : 12; // Convert 0 to 12
+  
+  return `${dateStr}, ${hours}:${minutes} ${ampm}`;
+};
   /* ================= TODAY / UPCOMING / MISSED ================= */
 
   const today = new Date();
