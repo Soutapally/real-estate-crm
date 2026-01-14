@@ -26,128 +26,134 @@ export default function FollowUpCards() {
   useEffect(() => {
     loadFollowUps();
   }, []);
-  useEffect(() => {
+  /* ================= DEBUG DATA ================= */
+useEffect(() => {
   if (followups.length > 0) {
-    console.log("Sample followup data:", followups[0]);
-    console.log("next_followup_at type:", typeof followups[0].next_followup_at);
-    console.log("next_followup_at value:", followups[0].next_followup_at);
+    console.log("=== DEBUG: FOLLOWUP DATA ===");
+    console.log("Total followups:", followups.length);
+    
+    followups.forEach((f, i) => {
+      console.log(`${i + 1}. Customer: ${f.customer_name}`);
+      console.log(`   Raw next_followup_at: ${f.next_followup_at}`);
+      console.log(`   Type: ${typeof f.next_followup_at}`);
+      console.log(`   Contains 'T': ${f.next_followup_at?.includes('T')}`);
+      console.log(`   Contains ' ': ${f.next_followup_at?.includes(' ')}`);
+      console.log(`   Formatted: ${formatFollowupTime(f.next_followup_at)}`);
+      console.log(`   Normalized: ${normalizeDate(f.next_followup_at)}`);
+    });
+    
+    console.log("=== DEBUG: TODAY COMPARISON ===");
+    console.log("Today time:", todayTime);
+    console.log("Today date:", new Date(todayTime).toLocaleDateString('en-IN'));
   }
 }, [followups]);
 
+  /* ================= DATE NORMALIZATION ================= */
 
+  // ✅ SAME FUNCTION, ONLY TIMEZONE FIXED
 /* ================= DATE NORMALIZATION ================= */
-const parseTimestamp = (value) => {
-  if (!value) return null;
-  
-  console.log("Parsing timestamp:", value);
-  
-  // Your database returns: "2026-01-14T09:00:00.000Z"
-  // Create Date object directly
-  const date = new Date(value);
-  
-  if (isNaN(date.getTime())) {
-    console.error("Invalid date:", value);
+/* ================= DATE NORMALIZATION ================= */
+const parsePostgresTimestamp = (value) => {
+  if (!value) {
+    console.warn("parsePostgresTimestamp received null/undefined");
     return null;
   }
   
-  // Convert to IST (UTC+5:30)
-  const istDate = new Date(date.getTime() + (5.5 * 60 * 60 * 1000));
+  // Check if value is a string
+  if (typeof value !== 'string') {
+    console.warn("parsePostgresTimestamp expected string, got:", typeof value, value);
+    return null;
+  }
   
-  return istDate;
+  console.log("Parsing timestamp:", value);
+  
+  // Handle ISO format: "2026-01-14T09:00:00.000Z" (what you're actually getting)
+  if (value.includes('T')) {
+    // Remove the 'Z' and milliseconds if present
+    const cleanValue = value.replace('Z', '').split('.')[0];
+    const date = new Date(cleanValue);
+    
+    if (isNaN(date.getTime())) {
+      console.warn("Invalid ISO date:", value);
+      return null;
+    }
+    
+    return date;
+  }
+  
+  // Handle PostgreSQL format: "YYYY-MM-DD HH:mm:ss" (just in case)
+  if (value.includes(' ')) {
+    const [datePart, timePart] = value.split(' ');
+    const isoString = `${datePart}T${timePart}`;
+    const date = new Date(isoString);
+    
+    if (isNaN(date.getTime())) {
+      console.warn("Invalid PostgreSQL date:", value);
+      return null;
+    }
+    
+    return date;
+  }
+  
+  // Fallback
+  const date = new Date(value);
+  return isNaN(date.getTime()) ? null : date;
 };
 
-// Format for display
+// ✅ normalizeDate should also use local time
+const normalizeDate = (dt) => {
+  const d = parsePostgresTimestamp(dt);
+  if (!d) return null;
+  
+  // Create a new date at midnight LOCAL time
+  const midnight = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  return midnight.getTime();
+};
+
+// ✅ formatFollowupTime - UPDATED TO HANDLE ISO FORMAT
 const formatFollowupTime = (dt) => {
-  const d = parseTimestamp(dt);
+  const d = parsePostgresTimestamp(dt);
   if (!d) return "—";
   
+  console.log("Formatting date:", dt, "->", d);
+  
+  // Format date in local time
   const dateStr = d.toLocaleDateString('en-IN', {
     day: 'numeric',
     month: 'short',
     year: 'numeric'
   });
   
+  // Format time in 12-hour format
   let hours = d.getHours();
   const minutes = d.getMinutes().toString().padStart(2, '0');
   const ampm = hours >= 12 ? 'PM' : 'AM';
   
   hours = hours % 12;
-  hours = hours ? hours : 12;
+  hours = hours ? hours : 12; // Convert 0 to 12
   
-  return `${dateStr}, ${hours}:${minutes} ${ampm}`;
+  const result = `${dateStr}, ${hours}:${minutes} ${ampm}`;
+  console.log("Formatted result:", result);
+  return result;
 };
+  /* ================= TODAY / UPCOMING / MISSED ================= */
 
-/* ================= TODAY / UPCOMING / MISSED ================= */
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const todayTime = today.getTime();
 
-// Get current date in IST
-const getTodayIST = () => {
-  const now = new Date();
-  const istOffset = 5.5 * 60 * 60 * 1000;
-  const istNow = new Date(now.getTime() + istOffset);
-  return new Date(istNow.getFullYear(), istNow.getMonth(), istNow.getDate());
-};
-
-const todayIST = getTodayIST();
-const todayStr = todayIST.toISOString().split('T')[0];
-
-console.log("Today's date (IST):", todayStr);
-console.log("Today's local display:", todayIST.toLocaleDateString('en-IN'));
-
-// Filter followups
-const todaysList = followups.filter(f => {
-  if (!f.next_followup_at) return false;
-  
-  const followupDate = parseTimestamp(f.next_followup_at);
-  if (!followupDate) return false;
-  
-  const followupDateOnly = new Date(
-    followupDate.getFullYear(),
-    followupDate.getMonth(),
-    followupDate.getDate()
+  const todaysList = followups.filter(
+    (f) => normalizeDate(f.next_followup_at) === todayTime
   );
-  
-  const followupStr = followupDateOnly.toISOString().split('T')[0];
-  
-  return followupStr === todayStr;
-});
 
-const upcomingList = followups.filter(f => {
-  if (!f.next_followup_at) return false;
-  
-  const followupDate = parseTimestamp(f.next_followup_at);
-  if (!followupDate) return false;
-  
-  const followupDateOnly = new Date(
-    followupDate.getFullYear(),
-    followupDate.getMonth(),
-    followupDate.getDate()
+  const upcomingList = followups.filter(
+    (f) => normalizeDate(f.next_followup_at) > todayTime
   );
-  
-  return followupDateOnly > todayIST;
-});
 
-const missedList = followups.filter(f => {
-  if (!f.next_followup_at) return false;
-  
-  const followupDate = parseTimestamp(f.next_followup_at);
-  if (!followupDate) return false;
-  
-  const followupDateOnly = new Date(
-    followupDate.getFullYear(),
-    followupDate.getMonth(),
-    followupDate.getDate()
+  const missedList = followups.filter(
+    (f) => normalizeDate(f.next_followup_at) < todayTime
   );
-  
-  return followupDateOnly < todayIST;
-});
 
-console.log("Filter results:", {
-  total: followups.length,
-  today: todaysList.length,
-  upcoming: upcomingList.length,
-  missed: missedList.length,
-  todayDate: todayStr
-});
   /* ================= CARD ================= */
 
   const renderCard = (f, type) => (
