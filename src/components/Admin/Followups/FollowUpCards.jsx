@@ -34,39 +34,31 @@ export default function FollowUpCards() {
   }
 }, [followups]);
 
-  /* ================= DATE NORMALIZATION ================= */
 
-  // ✅ SAME FUNCTION, ONLY TIMEZONE FIXED
 /* ================= DATE NORMALIZATION ================= */
-/* ================= DATE NORMALIZATION ================= */
-/* ================= DATE NORMALIZATION ================= */
-const parsePostgresTimestamp = (value) => {
+const parseTimestamp = (value) => {
   if (!value) return null;
   
-  if (typeof value !== 'string') return null;
+  console.log("Parsing timestamp:", value);
   
-  // PostgreSQL stores timestamp without timezone: "YYYY-MM-DD HH:mm:ss"
-  const [datePart, timePart] = value.split(' ');
+  // Your database returns: "2026-01-14T09:00:00.000Z"
+  // Create Date object directly
+  const date = new Date(value);
   
-  if (!datePart || !timePart) return null;
+  if (isNaN(date.getTime())) {
+    console.error("Invalid date:", value);
+    return null;
+  }
   
-  // Create LOCAL date (not UTC)
-  const [year, month, day] = datePart.split('-').map(Number);
-  const [hours, minutes, seconds] = timePart.split(':').map(Number);
+  // Convert to IST (UTC+5:30)
+  const istDate = new Date(date.getTime() + (5.5 * 60 * 60 * 1000));
   
-  // Create local date object
-  return new Date(year, month - 1, day, hours || 0, minutes || 0, seconds || 0);
+  return istDate;
 };
 
-// Get only the date part (ignoring time) in LOCAL time
-const getDateOnly = (date) => {
-  if (!date) return null;
-  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
-};
-
-// Format for display - LOCAL time
+// Format for display
 const formatFollowupTime = (dt) => {
-  const d = parsePostgresTimestamp(dt);
+  const d = parseTimestamp(dt);
   if (!d) return "—";
   
   const dateStr = d.toLocaleDateString('en-IN', {
@@ -84,57 +76,78 @@ const formatFollowupTime = (dt) => {
   
   return `${dateStr}, ${hours}:${minutes} ${ampm}`;
 };
+
 /* ================= TODAY / UPCOMING / MISSED ================= */
 
-const today = new Date();
-const todayDateOnly = getDateOnly(today);
+// Get current date in IST
+const getTodayIST = () => {
+  const now = new Date();
+  const istOffset = 5.5 * 60 * 60 * 1000;
+  const istNow = new Date(now.getTime() + istOffset);
+  return new Date(istNow.getFullYear(), istNow.getMonth(), istNow.getDate());
+};
 
-// Debug: Log what we're getting
-console.log("Today date:", todayDateOnly.toISOString().split('T')[0]);
-console.log("Total followups:", followups.length);
+const todayIST = getTodayIST();
+const todayStr = todayIST.toISOString().split('T')[0];
 
-// Filter using string comparison (more reliable)
+console.log("Today's date (IST):", todayStr);
+console.log("Today's local display:", todayIST.toLocaleDateString('en-IN'));
+
+// Filter followups
 const todaysList = followups.filter(f => {
   if (!f.next_followup_at) return false;
   
-  const followupDate = parsePostgresTimestamp(f.next_followup_at);
+  const followupDate = parseTimestamp(f.next_followup_at);
   if (!followupDate) return false;
   
-  const followupDateOnly = getDateOnly(followupDate);
+  const followupDateOnly = new Date(
+    followupDate.getFullYear(),
+    followupDate.getMonth(),
+    followupDate.getDate()
+  );
   
-  // Compare as strings (YYYY-MM-DD)
-  const todayStr = todayDateOnly.toISOString().split('T')[0];
   const followupStr = followupDateOnly.toISOString().split('T')[0];
   
-  console.log("Comparing:", todayStr, "with", followupStr);
-  return todayStr === followupStr;
+  return followupStr === todayStr;
 });
 
 const upcomingList = followups.filter(f => {
   if (!f.next_followup_at) return false;
   
-  const followupDate = parsePostgresTimestamp(f.next_followup_at);
+  const followupDate = parseTimestamp(f.next_followup_at);
   if (!followupDate) return false;
   
-  const followupDateOnly = getDateOnly(followupDate);
-  return followupDateOnly > todayDateOnly;
+  const followupDateOnly = new Date(
+    followupDate.getFullYear(),
+    followupDate.getMonth(),
+    followupDate.getDate()
+  );
+  
+  return followupDateOnly > todayIST;
 });
 
 const missedList = followups.filter(f => {
   if (!f.next_followup_at) return false;
   
-  const followupDate = parsePostgresTimestamp(f.next_followup_at);
+  const followupDate = parseTimestamp(f.next_followup_at);
   if (!followupDate) return false;
   
-  const followupDateOnly = getDateOnly(followupDate);
-  return followupDateOnly < todayDateOnly;
+  const followupDateOnly = new Date(
+    followupDate.getFullYear(),
+    followupDate.getMonth(),
+    followupDate.getDate()
+  );
+  
+  return followupDateOnly < todayIST;
 });
 
-// Debug logs
-console.log("Today's followups:", todaysList.length);
-console.log("Upcoming followups:", upcomingList.length);
-console.log("Missed followups:", missedList.length);
-
+console.log("Filter results:", {
+  total: followups.length,
+  today: todaysList.length,
+  upcoming: upcomingList.length,
+  missed: missedList.length,
+  todayDate: todayStr
+});
   /* ================= CARD ================= */
 
   const renderCard = (f, type) => (
@@ -188,32 +201,7 @@ console.log("Missed followups:", missedList.length);
             + Schedule Follow-up
           </button>
         </div>
-<div style={{background: '#f0f0f0', padding: '15px', marginBottom: '20px', borderRadius: '8px', border: '1px solid #ccc'}}>
-        <h3>🔍 Debug Information</h3>
-        <p><strong>Today's Date:</strong> {new Date().toLocaleDateString('en-IN')}</p>
-        <p><strong>Total Followups:</strong> {followups.length}</p>
-        <p><strong>Today's Count:</strong> {todaysList.length}</p>
-        <p><strong>Upcoming Count:</strong> {upcomingList.length}</p>
-        <p><strong>Missed Count:</strong> {missedList.length}</p>
-        
-        {followups.length > 0 && (
-          <div style={{marginTop: '10px'}}>
-            <p><strong>All Followups:</strong></p>
-            {followups.map((f, index) => (
-              <div key={index} style={{marginBottom: '5px', padding: '5px', background: 'white', borderRadius: '4px'}}>
-                <p style={{margin: 0}}><strong>Customer:</strong> {f.customer_name}</p>
-                <p style={{margin: 0}}><strong>DB Date:</strong> {f.next_followup_at}</p>
-                <p style={{margin: 0}}><strong>Formatted:</strong> {formatFollowupTime(f.next_followup_at)}</p>
-                <p style={{margin: 0}}><strong>Category:</strong> {
-                  todaysList.includes(f) ? 'TODAY' : 
-                  upcomingList.includes(f) ? 'UPCOMING' : 
-                  missedList.includes(f) ? 'MISSED' : 'UNKNOWN'
-                }</p>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+
         <div className="fu-sections">
           <div className="fu-section fu-today-border">
             <h2 className="fu-section-title">Today</h2>
