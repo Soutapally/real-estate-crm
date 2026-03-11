@@ -15,12 +15,11 @@ export default function CustomerMatches() {
   const [customer, setCustomer] = useState(null);
   const [properties, setProperties] = useState([]);
   const [siteVisits, setSiteVisits] = useState([]);
-
-  useEffect(() => {
-    loadCustomer();
-    loadMatches();
-    loadSiteVisits();
-  }, []);
+useEffect(() => {
+  loadCustomer();
+  loadMatches();
+  loadSiteVisits();
+}, [id]);
 
   const loadCustomer = async () => {
     const res = await fetch(`${API_BASE_URL}/api/customer/${id}`);
