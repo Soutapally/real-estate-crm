@@ -183,7 +183,7 @@ const handleSubmit = async e => {
   setSubmitting(true);
 
   const nextFollowupAt = buildDateTime();
-  
+console.log("Saving followup time:", nextFollowupAt);
   // Validate datetime
   if (!nextFollowupAt) {
     alert("Please fill all date and time fields");
