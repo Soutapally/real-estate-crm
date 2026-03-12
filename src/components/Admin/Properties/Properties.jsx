@@ -64,7 +64,7 @@ const PropertyForm = () => {
         setForm({
           seller_id: data.seller_id || "",
           property_name: data.property_name || "",
-          property_types: data.property_types || [],
+          property_types: (data.property_types || []).map(Number),
           price: data.price || "",
           area_value: data.area_value || "",
           area_unit: data.area_unit || "sqft",
@@ -94,23 +94,25 @@ const PropertyForm = () => {
   };
 
   /* ======================
-     PROPERTY TYPE SELECT
+     PROPERTY TYPE TOGGLE
   ====================== */
 
   const togglePropertyType = (typeId) => {
 
-    if (form.property_types.includes(typeId)) {
+    const idNum = Number(typeId);
+
+    if (form.property_types.includes(idNum)) {
 
       setForm({
         ...form,
-        property_types: form.property_types.filter(id => id !== typeId)
+        property_types: form.property_types.filter(id => id !== idNum)
       });
 
     } else {
 
       setForm({
         ...form,
-        property_types: [...form.property_types, typeId]
+        property_types: [...form.property_types, idNum]
       });
 
     }
@@ -142,7 +144,7 @@ const PropertyForm = () => {
 
       property_name: form.property_name,
 
-      property_types: form.property_types,
+      property_types: form.property_types.map(Number),
 
       price: form.price || null,
 
@@ -263,7 +265,9 @@ const PropertyForm = () => {
 
                   {form.property_types.map((id) => {
 
-                    const type = propertyTypes.find(t => t.type_id === id);
+                    const type = propertyTypes.find(
+                      t => Number(t.type_id) === Number(id)
+                    );
 
                     return (
                       <span key={id} className="type-chip">
@@ -292,7 +296,7 @@ const PropertyForm = () => {
 
                       <input
                         type="checkbox"
-                        checked={form.property_types.includes(pt.type_id)}
+                        checked={form.property_types.includes(Number(pt.type_id))}
                         onChange={() => togglePropertyType(pt.type_id)}
                       />
 
