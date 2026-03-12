@@ -183,3 +183,52 @@ textarea {
     padding: 10px;
   }
 }
+
+.multi-select{
+border:1px solid #ddd;
+border-radius:8px;
+padding:10px;
+background:#fff;
+}
+
+.selected-types{
+display:flex;
+flex-wrap:wrap;
+gap:6px;
+margin-bottom:10px;
+}
+
+.type-chip{
+background:#1a237e;
+color:white;
+padding:4px 10px;
+border-radius:20px;
+font-size:12px;
+display:flex;
+align-items:center;
+gap:6px;
+}
+
+.type-chip button{
+border:none;
+background:transparent;
+color:white;
+cursor:pointer;
+font-size:14px;
+}
+
+.dropdown-types{
+max-height:160px;
+overflow-y:auto;
+border-top:1px solid #eee;
+padding-top:6px;
+}
+
+.type-option{
+display:flex;
+align-items:center;
+gap:8px;
+padding:6px 4px;
+cursor:pointer;
+font-size:13px;
+}

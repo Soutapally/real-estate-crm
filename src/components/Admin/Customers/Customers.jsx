@@ -1,3 +1,199 @@
+// import React, { useState, useEffect } from "react";
+// import { useParams, useNavigate } from "react-router-dom";
+// import "./Customers.css";
+// import Sidebar from "../../Navbar/Sidebar";
+// import Button from "../../Buttons/Buttons";
+// import Topbar from "../../Navbar/Topbar";
+// import API_BASE_URL from "../../Config/api";
+
+// const CustomerForm = () => {
+//   const { id } = useParams();
+//   const navigate = useNavigate();
+
+//   /* =========================
+//      SIDEBAR STATE (REQUIRED)
+//   ========================= */
+//   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+//   const [propertyTypes, setPropertyTypes] = useState([]);
+
+//   const [data, setData] = useState({
+//     name: "",
+//     phone: "",
+//     phone_alt: "",
+//     email: "",
+//     budget_from_value: "",
+//     budget_from_unit: "Lakhs",
+//     budget_to_value: "",
+//     budget_to_unit: "Lakhs",
+//     location: "",
+//     property_type: "",
+//     requirement: "",
+//     status: "",
+//   });
+
+//   const update = (e) => {
+//     setData({ ...data, [e.target.name]: e.target.value });
+//   };
+
+//   useEffect(() => {
+//     loadPropertyTypes();
+//     if (id) loadCustomer();
+//   }, [id]);
+  
+// const loadPropertyTypes = async () => {
+//   const res = await fetch(`${API_BASE_URL}/api/property-types`);
+//   const types = await res.json();
+//   setPropertyTypes(types);
+// };
+
+
+//   const loadCustomer = async () => {
+//     const res = await fetch(`${API_BASE_URL}/api/customer/${id}`);
+//     const customer = await res.json();
+
+//     const [fromValue, fromUnit] = customer.budget_min?.split(" ") || ["", "Lakhs"];
+//     const [toValue, toUnit] = customer.budget_max?.split(" ") || ["", "Lakhs"];
+
+//     setData({
+//       name: customer.name,
+//       phone: customer.phone,
+//       phone_alt: customer.phone_alt || "",
+//       email: customer.email,
+//       budget_from_value: fromValue,
+//       budget_from_unit: fromUnit,
+//       budget_to_value: toValue,
+//       budget_to_unit: toUnit,
+//       location: customer.preferred_location,
+//       property_type: customer.property_type,
+//       requirement: customer.requirement_details,
+//       status: customer.lead_status,
+//     });
+//   };
+
+//   const submit = async (e) => {
+//     e.preventDefault();
+
+//     // const payload = {
+//     //   name: data.name,
+//     //   phone: data.phone,
+//     //   phone_alt: data.phone_alt,
+//     //   email: data.email,
+//     //   budget_from: `${data.budget_from_value} ${data.budget_from_unit}`,
+//     //   budget_to: `${data.budget_to_value} ${data.budget_to_unit}`,
+//     //   location: data.location,
+//     //   property_type: data.property_type,
+//     //   requirement: data.requirement,
+//     //   status: data.status,
+//     // };
+//     const payload = {
+//   name: data.name,
+//   phone: data.phone,
+
+//   phone_alt: data.phone_alt?.trim() || null,
+//   email: data.email?.trim() || null,
+
+//   // ✅ SAFE BUDGET BUILDING
+//   budget_from:
+//     data.budget_from_value && data.budget_from_unit
+//       ? `${data.budget_from_value} ${data.budget_from_unit}`
+//       : null,
+
+//   budget_to:
+//     data.budget_to_value && data.budget_to_unit
+//       ? `${data.budget_to_value} ${data.budget_to_unit}`
+//       : null,
+
+//   location: data.location?.trim() || null,
+//   property_type: data.property_type || null,
+//   requirement: data.requirement?.trim() || null,
+//   status: data.status || null,
+// };
+
+
+//     const url = id
+//       ? `${API_BASE_URL}/api/update-customer/${id}`
+//       : `${API_BASE_URL}/api/add-customer`;
+
+//     const res = await fetch(url, {
+//       method: id ? "PUT" : "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify(payload),
+//     });
+
+//     const result = await res.json();
+//     alert(result.message);
+//     navigate("/customers");
+//   };
+
+//   return (
+//     <div className="layout-wrapper">
+//       {/* ✅ PASS STATE */}
+//       <Sidebar isOpen={sidebarOpen} />
+
+//       {/* ✅ PASS TOGGLE */}
+//       <Topbar toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
+
+//       <div className="form-wrapper">
+//         <div className="form-card">
+//           <h2 className="customers-title">
+//             {id ? "Edit Customer" : "Add Customer / Buyer Lead"}
+//           </h2>
+
+//           <form className="form-column" onSubmit={submit}>
+//             <input name="name" value={data.name} placeholder="Customer Name" onChange={update} required />
+//             <input name="phone" value={data.phone} placeholder="Phone Number" onChange={update} required />
+//             <input name="phone_alt" value={data.phone_alt} placeholder="Alternate Phone Number" onChange={update} />
+//             <input name="email" value={data.email} placeholder="Email ID" type="email" onChange={update} />
+
+//             <div className="budget-row">
+//               <input type="number" name="budget_from_value" placeholder="Budget From" value={data.budget_from_value} onChange={update} />
+//               <select name="budget_from_unit" value={data.budget_from_unit} onChange={update}>
+//                 <option>Lakhs</option>
+//                 <option>Crores</option>
+//               </select>
+//             </div>
+
+//             <div className="budget-row">
+//               <input type="number" name="budget_to_value" placeholder="Budget To" value={data.budget_to_value} onChange={update} />
+//               <select name="budget_to_unit" value={data.budget_to_unit} onChange={update}>
+//                 <option>Lakhs</option>
+//                 <option>Crores</option>
+//               </select>
+//             </div>
+
+//             <input name="location" value={data.location} placeholder="Preferred Location" onChange={update} />
+
+//             <select name="property_type" value={data.property_type} onChange={update}>
+//               <option value="">Interested Property Type</option>
+//               {propertyTypes.map((pt) => (
+//                 <option key={pt.type_id} value={pt.type_name}>
+//                   {pt.type_name}
+//                 </option>
+//               ))}
+//             </select>
+
+//             <textarea name="requirement" value={data.requirement} placeholder="Requirement Details" onChange={update} />
+
+//             <select name="status" value={data.status} onChange={update}>
+//               <option value="">Lead Status</option>
+//               <option>New</option>
+//               <option>Follow-up</option>
+//               <option>Site Visit</option>
+//               <option>Hot</option>
+//               <option>Closed</option>
+//               <option>Lost</option>
+//             </select>
+
+//             <Button label={id ? "Update Customer" : "Save Customer"} type="submit" />
+//           </form>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default CustomerForm;
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "./Customers.css";
@@ -7,6 +203,7 @@ import Topbar from "../../Navbar/Topbar";
 import API_BASE_URL from "../../Config/api";
 
 const CustomerForm = () => {
+
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -23,7 +220,7 @@ const CustomerForm = () => {
     budget_to_value: "",
     budget_to_unit: "Lakhs",
     location: "",
-    property_types: [],   // ⭐ ARRAY NOW
+    property_types: [],   // ⭐ MULTI SELECT ARRAY
     requirement: "",
     status: "",
   });
@@ -32,18 +229,17 @@ const CustomerForm = () => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
 
-  /* =========================
-     LOAD PROPERTY TYPES
-  ========================= */
+  useEffect(() => {
+    loadPropertyTypes();
+    if (id) loadCustomer();
+  }, [id]);
+
   const loadPropertyTypes = async () => {
     const res = await fetch(`${API_BASE_URL}/api/property-types`);
     const types = await res.json();
     setPropertyTypes(types);
   };
 
-  /* =========================
-     LOAD CUSTOMER
-  ========================= */
   const loadCustomer = async () => {
     const res = await fetch(`${API_BASE_URL}/api/customer/${id}`);
     const customer = await res.json();
@@ -64,40 +260,55 @@ const CustomerForm = () => {
       budget_to_value: toValue,
       budget_to_unit: toUnit,
       location: customer.preferred_location || "",
-      property_types: customer.property_types || [], // ⭐ LOAD ARRAY
+      property_types: customer.property_types || [],
       requirement: customer.requirement_details || "",
       status: customer.lead_status || "",
     });
   };
 
-  useEffect(() => {
-    loadPropertyTypes();
-    if (id) loadCustomer();
-  }, [id]);
+  /* ======================
+     PROPERTY TYPE TOGGLE
+  ====================== */
 
-  /* =========================
-     MULTI SELECT HANDLER
-  ========================= */
+  const togglePropertyType = (typeId) => {
 
-  const handlePropertyTypes = (e) => {
-    const values = [...e.target.selectedOptions].map(
-      (opt) => Number(opt.value)
-    );
+    if (data.property_types.includes(typeId)) {
+
+      setData({
+        ...data,
+        property_types: data.property_types.filter(t => t !== typeId)
+      });
+
+    } else {
+
+      setData({
+        ...data,
+        property_types: [...data.property_types, typeId]
+      });
+
+    }
+
+  };
+
+  const removeType = (typeId) => {
 
     setData({
       ...data,
-      property_types: values,
+      property_types: data.property_types.filter(t => t !== typeId)
     });
+
   };
 
-  /* =========================
+  /* ======================
      SUBMIT
-  ========================= */
+  ====================== */
 
   const submit = async (e) => {
+
     e.preventDefault();
 
     const payload = {
+
       name: data.name,
       phone: data.phone,
 
@@ -116,7 +327,7 @@ const CustomerForm = () => {
 
       location: data.location?.trim() || null,
 
-      property_types: data.property_types, // ⭐ SEND ARRAY
+      property_types: data.property_types,   // ⭐ ARRAY SENT
 
       requirement: data.requirement?.trim() || null,
       status: data.status || null,
@@ -138,12 +349,14 @@ const CustomerForm = () => {
   };
 
   return (
+
     <div className="layout-wrapper">
 
       <Sidebar isOpen={sidebarOpen} />
       <Topbar toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
 
       <div className="form-wrapper">
+
         <div className="form-card">
 
           <h2 className="customers-title">
@@ -230,19 +443,53 @@ const CustomerForm = () => {
               onChange={update}
             />
 
-            {/* ⭐ MULTI PROPERTY TYPES */}
+            {/* ⭐ MULTI PROPERTY TYPE */}
 
-            <select
-              multiple
-              value={data.property_types}
-              onChange={handlePropertyTypes}
-            >
-              {propertyTypes.map((pt) => (
-                <option key={pt.type_id} value={pt.type_id}>
-                  {pt.type_name}
-                </option>
-              ))}
-            </select>
+            <div className="multi-select">
+
+              <div className="selected-types">
+
+                {data.property_types.map(id => {
+
+                  const type = propertyTypes.find(t => t.type_id === id);
+
+                  return (
+                    <span key={id} className="type-chip">
+                      {type?.type_name}
+                      <button
+                        type="button"
+                        onClick={() => removeType(id)}
+                      >
+                        ×
+                      </button>
+                    </span>
+                  );
+
+                })}
+
+              </div>
+
+              <div className="dropdown-types">
+
+                {propertyTypes.map(pt => (
+
+                  <label key={pt.type_id} className="type-option">
+
+                    <input
+                      type="checkbox"
+                      checked={data.property_types.includes(pt.type_id)}
+                      onChange={() => togglePropertyType(pt.type_id)}
+                    />
+
+                    {pt.type_name}
+
+                  </label>
+
+                ))}
+
+              </div>
+
+            </div>
 
             <textarea
               name="requirement"
@@ -271,6 +518,7 @@ const CustomerForm = () => {
             />
 
           </form>
+
         </div>
       </div>
     </div>

@@ -7,6 +7,7 @@ import Topbar from "../../Navbar/Topbar";
 import API_BASE_URL from "../../Config/api";
 
 const PropertyForm = () => {
+
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -28,69 +29,161 @@ const PropertyForm = () => {
     description: ""
   });
 
+  /* ======================
+     LOAD SELLERS
+  ====================== */
+
   useEffect(() => {
     fetch(`${API_BASE_URL}/api/sellers`)
       .then(res => res.json())
       .then(data => setSellers(data));
   }, []);
 
+  /* ======================
+     LOAD PROPERTY TYPES
+  ====================== */
+
   useEffect(() => {
-   fetch(`${API_BASE_URL}/api/property-types`)
+    fetch(`${API_BASE_URL}/api/property-types`)
       .then(res => res.json())
       .then(data => setPropertyTypes(data));
   }, []);
 
+  /* ======================
+     LOAD PROPERTY FOR EDIT
+  ====================== */
+
   useEffect(() => {
-    if (id) {
-     fetch(`${API_BASE_URL}/api/property/${id}`)
-        .then(res => res.json())
-        .then(data => setForm(data));
-    }
+
+    if (!id) return;
+
+    fetch(`${API_BASE_URL}/api/property/${id}`)
+      .then(res => res.json())
+      .then(data => {
+
+        setForm({
+          seller_id: data.seller_id || "",
+          property_name: data.property_name || "",
+          property_type: data.property_type || "",
+          price: data.price || "",
+          area_value: data.area_value || "",
+          area_unit: data.area_unit || "sqft",
+          facing_direction: data.facing_direction || "",
+          mandal: data.mandal || "",
+          address: data.address || "",
+          district: data.district || "",
+          availability: data.availability || "",
+          description: data.description || ""
+        });
+
+      });
+
   }, [id]);
 
-  const handleChange = (e) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
+  /* ======================
+     INPUT HANDLER
+  ====================== */
+
+  const handleChange = (e) => {
+
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value
+    });
+
+  };
+
+  /* ======================
+     SUBMIT
+  ====================== */
 
   const handleSubmit = async (e) => {
+
     e.preventDefault();
 
-   const url = id
-  ? `${API_BASE_URL}/api/update-property/${id}`
-  : `${API_BASE_URL}/api/add-property`;
+    if (!form.seller_id || !form.property_name) {
+      alert("Seller and Property Name are required");
+      return;
+    }
+
+    const url = id
+      ? `${API_BASE_URL}/api/update-property/${id}`
+      : `${API_BASE_URL}/api/add-property`;
+
     const method = id ? "PUT" : "POST";
 
     const payload = {
-  seller_id: form.seller_id,
-  property_name: form.property_name,
 
-  property_type: form.property_type || null,
-  price: form.price || null,
-  area_value: form.area_value || null,
-  area_unit: form.area_unit || null,
-  facing_direction: form.facing_direction || null,
-  mandal: form.mandal || null,
-  address: form.address || null,
-  district: form.district || null,
-  availability: form.availability || null,
-  description: form.description || null
-};
+      seller_id: Number(form.seller_id),
 
-    const res = await fetch(url, {
-      method,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
+      property_name: form.property_name,
 
-    const result = await res.json();
-    alert(result.message);
-    navigate("/properties");
+      property_type: form.property_type
+        ? Number(form.property_type)
+        : null,
+
+      price: form.price || null,
+
+      area_value: form.area_value || null,
+
+      area_unit: form.area_unit || null,
+
+      facing_direction: form.facing_direction || null,
+
+      mandal: form.mandal || null,
+
+      address: form.address || null,
+
+      district: form.district || null,
+
+      availability: form.availability || null,
+
+      description: form.description || null
+
+    };
+
+    try {
+
+      const res = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      const result = await res.json();
+
+      if (!res.ok) {
+        alert(result.message || "Something went wrong");
+        return;
+      }
+
+      alert(result.message);
+
+      navigate("/properties");
+
+    } catch (err) {
+
+      console.error(err);
+      alert("Server error");
+
+    }
+
   };
 
+  /* ======================
+     UI
+  ====================== */
+
   return (
+
     <div className="properties-layout">
+
       <Sidebar />
-<Topbar />
+
+      <Topbar />
+
       <div className="properties-form-wrapper">
+
         <div className="properties-form-card">
 
           <h2 className="properties-title">
@@ -99,8 +192,11 @@ const PropertyForm = () => {
 
           <form className="properties-form-column" onSubmit={handleSubmit}>
 
+            {/* Seller */}
+
             <div className="form-row">
               <label>Select Seller</label>
+
               <select
                 className="properties-select"
                 name="seller_id"
@@ -108,17 +204,23 @@ const PropertyForm = () => {
                 onChange={handleChange}
                 required
               >
+
                 <option value="">Select Seller</option>
+
                 {sellers.map((s) => (
                   <option key={s.seller_id} value={s.seller_id}>
                     ({s.seller_id}) {s.name}
                   </option>
                 ))}
+
               </select>
             </div>
 
+            {/* Property Name */}
+
             <div className="form-row">
               <label>Property Name</label>
+
               <input
                 className="properties-input"
                 name="property_name"
@@ -128,8 +230,11 @@ const PropertyForm = () => {
               />
             </div>
 
+            {/* Property Type */}
+
             <div className="form-row">
               <label>Property Type</label>
+
               <select
                 className="properties-select"
                 name="property_type"
@@ -137,17 +242,23 @@ const PropertyForm = () => {
                 onChange={handleChange}
                 required
               >
+
                 <option value="">Select Type</option>
+
                 {propertyTypes.map((pt) => (
-                  <option key={pt.type_id} value={pt.type_name}>
+                  <option key={pt.type_id} value={pt.type_id}>
                     {pt.type_name}
                   </option>
                 ))}
+
               </select>
             </div>
 
+            {/* Price */}
+
             <div className="form-row">
               <label>Price (₹)</label>
+
               <input
                 className="properties-input"
                 type="number"
@@ -157,10 +268,13 @@ const PropertyForm = () => {
               />
             </div>
 
-            {/* ✅ AREA + UNIT — FIXED */}
+            {/* Area */}
+
             <div className="form-row">
               <label>Area</label>
+
               <div className="property-area-row">
+
                 <input
                   className="properties-input"
                   type="number"
@@ -176,32 +290,43 @@ const PropertyForm = () => {
                   value={form.area_unit}
                   onChange={handleChange}
                 >
+
                   <option value="sqft">Sqft</option>
                   <option value="sqyds">Sq Yards</option>
                   <option value="acres">Acres</option>
                   <option value="guntas">Guntas</option>
+
                 </select>
+
               </div>
             </div>
 
+            {/* Facing */}
+
             <div className="form-row">
               <label>Facing</label>
+
               <select
                 className="properties-select"
                 name="facing_direction"
                 value={form.facing_direction}
                 onChange={handleChange}
               >
+
                 <option value="">Select</option>
                 <option>East</option>
                 <option>West</option>
                 <option>North</option>
                 <option>South</option>
+
               </select>
             </div>
 
+            {/* Mandal */}
+
             <div className="form-row">
               <label>Mandal</label>
+
               <input
                 className="properties-input"
                 name="mandal"
@@ -210,8 +335,11 @@ const PropertyForm = () => {
               />
             </div>
 
+            {/* Address */}
+
             <div className="form-row">
               <label>Address</label>
+
               <input
                 className="properties-input"
                 name="address"
@@ -220,8 +348,11 @@ const PropertyForm = () => {
               />
             </div>
 
+            {/* District */}
+
             <div className="form-row">
               <label>District</label>
+
               <input
                 className="properties-input"
                 name="district"
@@ -230,40 +361,52 @@ const PropertyForm = () => {
               />
             </div>
 
+            {/* Availability */}
+
             <div className="form-row">
               <label>Availability</label>
+
               <select
                 className="properties-select"
                 name="availability"
                 value={form.availability}
                 onChange={handleChange}
               >
+
                 <option value="">Select</option>
                 <option>Available</option>
                 <option>Sold</option>
                 <option>Booked</option>
                 <option>Rented</option>
+
               </select>
             </div>
 
+            {/* Description */}
+
             <div className="form-row">
               <label>Description</label>
+
               <textarea
                 className="properties-textarea"
                 name="description"
                 value={form.description}
                 onChange={handleChange}
               />
+
             </div>
 
             <div className="properties-button-wrap">
+
               <Button
                 label={id ? "Update Property" : "Save Property"}
                 type="submit"
               />
+
             </div>
 
           </form>
+
         </div>
       </div>
     </div>
