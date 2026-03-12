@@ -17,7 +17,7 @@ const PropertyForm = () => {
   const [form, setForm] = useState({
     seller_id: "",
     property_name: "",
-    property_type: "",
+    property_types: [],
     price: "",
     area_value: "",
     area_unit: "sqft",
@@ -64,7 +64,7 @@ const PropertyForm = () => {
         setForm({
           seller_id: data.seller_id || "",
           property_name: data.property_name || "",
-          property_type: data.property_type || "",
+          property_types: data.property_types || [],
           price: data.price || "",
           area_value: data.area_value || "",
           area_unit: data.area_unit || "sqft",
@@ -94,6 +94,30 @@ const PropertyForm = () => {
   };
 
   /* ======================
+     PROPERTY TYPE SELECT
+  ====================== */
+
+  const togglePropertyType = (typeId) => {
+
+    if (form.property_types.includes(typeId)) {
+
+      setForm({
+        ...form,
+        property_types: form.property_types.filter(id => id !== typeId)
+      });
+
+    } else {
+
+      setForm({
+        ...form,
+        property_types: [...form.property_types, typeId]
+      });
+
+    }
+
+  };
+
+  /* ======================
      SUBMIT
   ====================== */
 
@@ -118,9 +142,7 @@ const PropertyForm = () => {
 
       property_name: form.property_name,
 
-      property_type: form.property_type
-        ? Number(form.property_type)
-        : null,
+      property_types: form.property_types,
 
       price: form.price || null,
 
@@ -230,28 +252,60 @@ const PropertyForm = () => {
               />
             </div>
 
-            {/* Property Type */}
+            {/* PROPERTY TYPES MULTI SELECT */}
 
             <div className="form-row">
-              <label>Property Type</label>
+              <label>Property Types</label>
 
-              <select
-                className="properties-select"
-                name="property_type"
-                value={form.property_type}
-                onChange={handleChange}
-                required
-              >
+              <div className="multi-select">
 
-                <option value="">Select Type</option>
+                <div className="selected-types">
 
-                {propertyTypes.map((pt) => (
-                  <option key={pt.type_id} value={pt.type_id}>
-                    {pt.type_name}
-                  </option>
-                ))}
+                  {form.property_types.map((id) => {
 
-              </select>
+                    const type = propertyTypes.find(t => t.type_id === id);
+
+                    return (
+                      <span key={id} className="type-chip">
+
+                        {type?.type_name}
+
+                        <button
+                          type="button"
+                          onClick={() => togglePropertyType(id)}
+                        >
+                          ×
+                        </button>
+
+                      </span>
+                    );
+
+                  })}
+
+                </div>
+
+                <div className="dropdown-types">
+
+                  {propertyTypes.map(pt => (
+
+                    <label key={pt.type_id} className="type-option">
+
+                      <input
+                        type="checkbox"
+                        checked={form.property_types.includes(pt.type_id)}
+                        onChange={() => togglePropertyType(pt.type_id)}
+                      />
+
+                      {pt.type_name}
+
+                    </label>
+
+                  ))}
+
+                </div>
+
+              </div>
+
             </div>
 
             {/* Price */}
@@ -410,7 +464,9 @@ const PropertyForm = () => {
         </div>
       </div>
     </div>
+
   );
+
 };
 
 export default PropertyForm;

@@ -96,3 +96,42 @@
   color: #fff !important;
   font-weight: 600;
 }
+.multi-select{
+border:1px solid #ddd;
+border-radius:10px;
+padding:10px;
+}
+
+.selected-types{
+display:flex;
+flex-wrap:wrap;
+gap:8px;
+margin-bottom:10px;
+}
+
+.type-chip{
+background:#1a237e;
+color:white;
+padding:6px 10px;
+border-radius:20px;
+display:flex;
+align-items:center;
+gap:6px;
+}
+
+.type-chip button{
+border:none;
+background:transparent;
+color:white;
+cursor:pointer;
+}
+
+.dropdown-types{
+max-height:150px;
+overflow-y:auto;
+}
+
+.type-option{
+display:block;
+padding:6px;
+}
