@@ -59,10 +59,26 @@ const PropertyForm = () => {
   : `${API_BASE_URL}/api/add-property`;
     const method = id ? "PUT" : "POST";
 
+    const payload = {
+  seller_id: form.seller_id,
+  property_name: form.property_name,
+
+  property_type: form.property_type || null,
+  price: form.price || null,
+  area_value: form.area_value || null,
+  area_unit: form.area_unit || null,
+  facing_direction: form.facing_direction || null,
+  mandal: form.mandal || null,
+  address: form.address || null,
+  district: form.district || null,
+  availability: form.availability || null,
+  description: form.description || null
+};
+
     const res = await fetch(url, {
       method,
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
+      body: JSON.stringify(payload),
     });
 
     const result = await res.json();
