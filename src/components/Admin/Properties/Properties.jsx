@@ -146,7 +146,7 @@ const PropertyForm = () => {
 
       property_types: form.property_types.map(Number),
 
-      price: form.price || null,
+      price: form.price === "" ? null : Number(form.price),
 
       area_value: form.area_value || null,
 
