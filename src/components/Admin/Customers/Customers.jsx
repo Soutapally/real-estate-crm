@@ -474,72 +474,55 @@ const CustomerForm = () => {
                PROPERTY TYPE MULTI DROPDOWN
             =============================== */}
 
-            <div className="multi-select-container">
+           {/* ===============================
+   PROPERTY TYPE MULTI DROPDOWN
+================================ */}
 
-              <div
-                className="multi-select-input"
-                onClick={() => setDropdownOpen(!dropdownOpen)}
-              >
+<div className="multi-select-container">
 
-                {selectedPropertyNames || "Select Property Types"}
+  {/* Dropdown Input */}
+  <div
+    className="multi-select-input"
+    onClick={() => setDropdownOpen(!dropdownOpen)}
+  >
+    <span className="selected-text">
+      {selectedPropertyNames ? selectedPropertyNames : "Select Property Types"}
+    </span>
 
-                <span className="dropdown-arrow">▾</span>
-
-              </div>
-
-              {dropdownOpen && (
-
-                <div className="multi-select-dropdown">
-
-                  {propertyTypes.map((pt) => (
-
-                    <label key={pt.type_id} className="dropdown-option">
-
-                      <input
-                        type="checkbox"
-                        checked={data.property_types.includes(pt.type_id)}
-                        onChange={() => togglePropertyType(pt.type_id)}
-                      />
-
-                      <span>{pt.type_name}</span>
-
-                    </label>
-
-                  ))}
-
-                </div>
-
-              )}
-
-            </div>
+    <span className="dropdown-arrow">▾</span>
+  </div>
 
 
- 
+  {/* Dropdown List */}
+  {dropdownOpen && (
+    <div className="multi-select-dropdown">
 
-  {/* <div className="dropdown-types">
+      {propertyTypes.map((pt) => (
 
-    {propertyTypes.map(pt => (
+        <label
+          key={pt.type_id}
+          className="dropdown-option"
+        >
 
-      <label key={pt.type_id} className="type-option">
+          <input
+            type="checkbox"
+            checked={data.property_types.includes(pt.type_id)}
+            onChange={() => togglePropertyType(pt.type_id)}
+          />
 
-        <input
-          type="checkbox"
-          checked={data.property_types.includes(pt.type_id)}
-          onChange={() => togglePropertyType(pt.type_id)}
-        />
+          <span className="option-text">
+            {pt.type_name}
+          </span>
 
-        <span className="type-name">
-          {pt.type_name}
-        </span>
+        </label>
 
-      </label>
+      ))}
 
-    ))}
-
-  </div> */}
+    </div>
+  )}
 
 </div>
-
+</div>
             <textarea
               name="requirement"
               value={data.requirement}
