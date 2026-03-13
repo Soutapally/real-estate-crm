@@ -241,30 +241,51 @@ const CustomerForm = () => {
   };
 
   const loadCustomer = async () => {
-    const res = await fetch(`${API_BASE_URL}/api/customer/${id}`);
-    const customer = await res.json();
 
-    const [fromValue, fromUnit] =
-      customer.budget_min?.split(" ") || ["", "Lakhs"];
+  const res = await fetch(`${API_BASE_URL}/api/customer/${id}`);
+  const customer = await res.json();
 
-    const [toValue, toUnit] =
-      customer.budget_max?.split(" ") || ["", "Lakhs"];
+  const [fromValue, fromUnit] =
+    customer.budget_min?.split(" ") || ["", "Lakhs"];
 
-    setData({
-      name: customer.name,
-      phone: customer.phone,
-      phone_alt: customer.phone_alt || "",
-      email: customer.email || "",
-      budget_from_value: fromValue,
-      budget_from_unit: fromUnit,
-      budget_to_value: toValue,
-      budget_to_unit: toUnit,
-      location: customer.preferred_location || "",
-      property_types: customer.property_types || [],
-      requirement: customer.requirement_details || "",
-      status: customer.lead_status || "",
-    });
-  };
+  const [toValue, toUnit] =
+    customer.budget_max?.split(" ") || ["", "Lakhs"];
+
+  /* ⭐ convert saved property_types into array */
+
+  let selectedTypes = [];
+
+  if (customer.property_types) {
+
+    if (Array.isArray(customer.property_types)) {
+      selectedTypes = customer.property_types;
+    } else {
+      selectedTypes = customer.property_types.split(",").map(Number);
+    }
+
+  }
+
+  setData({
+    name: customer.name,
+    phone: customer.phone,
+    phone_alt: customer.phone_alt || "",
+    email: customer.email || "",
+
+    budget_from_value: fromValue,
+    budget_from_unit: fromUnit,
+
+    budget_to_value: toValue,
+    budget_to_unit: toUnit,
+
+    location: customer.preferred_location || "",
+
+    property_types: selectedTypes,   // ⭐ FIXED
+
+    requirement: customer.requirement_details || "",
+    status: customer.lead_status || "",
+  });
+
+};
 
   /* ======================
      PROPERTY TYPE TOGGLE
@@ -445,51 +466,65 @@ const CustomerForm = () => {
 
             {/* ⭐ MULTI PROPERTY TYPE */}
 
-            <div className="multi-select">
+          <div className="multi-select">
 
-              <div className="selected-types">
+  {/* SELECTED PROPERTY TYPES */}
 
-                {data.property_types.map(id => {
+  <div className="selected-types">
 
-                  const type = propertyTypes.find(t => t.type_id === id);
+    {data.property_types.map(typeId => {
 
-                  return (
-                    <span key={id} className="type-chip">
-                      {type?.type_name}
-                      <button
-                        type="button"
-                        onClick={() => removeType(id)}
-                      >
-                        ×
-                      </button>
-                    </span>
-                  );
+      const type = propertyTypes.find(t => t.type_id === typeId);
 
-                })}
+      if (!type) return null;
 
-              </div>
+      return (
 
-              <div className="dropdown-types">
+        <div key={typeId} className="type-chip">
 
-                {propertyTypes.map(pt => (
+          {type.type_name}
 
-                  <label key={pt.type_id} className="type-option">
+          <button
+            type="button"
+            onClick={() => removeType(typeId)}
+          >
+            ×
+          </button>
 
-                    <input
-                      type="checkbox"
-                      checked={data.property_types.includes(pt.type_id)}
-                      onChange={() => togglePropertyType(pt.type_id)}
-                    />
+        </div>
 
-                    {pt.type_name}
+      );
 
-                  </label>
+    })}
 
-                ))}
+  </div>
 
-              </div>
 
-            </div>
+  {/* CHECKBOX LIST */}
+
+  <div className="dropdown-types">
+
+    {propertyTypes.map(pt => (
+
+      <label key={pt.type_id} className="type-option">
+
+        <input
+          type="checkbox"
+          checked={data.property_types.includes(pt.type_id)}
+          onChange={() => togglePropertyType(pt.type_id)}
+        />
+
+        <span className="type-name">
+          {pt.type_name}
+        </span>
+
+      </label>
+
+    ))}
+
+  </div>
+
+</div>
 
             <textarea
               name="requirement"

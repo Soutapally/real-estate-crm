@@ -183,13 +183,18 @@ textarea {
     padding: 10px;
   }
 }
+/* ================================
+MULTI SELECT
+================================ */
 
 .multi-select{
 border:1px solid #ddd;
-border-radius:8px;
+border-radius:10px;
 padding:10px;
 background:#fff;
 }
+
+/* Selected Chips */
 
 .selected-types{
 display:flex;
@@ -200,8 +205,8 @@ margin-bottom:10px;
 
 .type-chip{
 background:#1a237e;
-color:white;
-padding:4px 10px;
+color:#fff;
+padding:5px 12px;
 border-radius:20px;
 font-size:12px;
 display:flex;
@@ -217,18 +222,42 @@ cursor:pointer;
 font-size:14px;
 }
 
+/* Dropdown list */
+
 .dropdown-types{
-max-height:160px;
+max-height:180px;
 overflow-y:auto;
 border-top:1px solid #eee;
-padding-top:6px;
+padding-top:8px;
+
+display:flex;
+flex-direction:column;
+gap:8px;
 }
+
+/* Each row */
 
 .type-option{
 display:flex;
 align-items:center;
-gap:8px;
+gap:10px;
+width:100%;
 padding:6px 4px;
 cursor:pointer;
-font-size:13px;
+font-size:14px;
+}
+
+/* checkbox */
+
+.type-option input{
+width:16px;
+height:16px;
+cursor:pointer;
+}
+
+/* text */
+
+.type-name{
+flex:1;
+white-space:nowrap;
 }
