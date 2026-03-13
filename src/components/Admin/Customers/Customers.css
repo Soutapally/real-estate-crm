@@ -186,83 +186,66 @@ textarea {
 /* ============================
 MULTI SELECT DROPDOWN
 ============================ */
-
 .multi-select-container{
 position:relative;
 width:100%;
 }
 
-/* Input box */
-
 .multi-select-input{
-width:100%;
+display:flex;
+justify-content:space-between;
+align-items:center;
 padding:12px 14px;
 border:1px solid #d1d5db;
 border-radius:10px;
 background:#fff;
-font-size:14px;
 cursor:pointer;
-
-display:flex;
-justify-content:space-between;
-align-items:center;
+font-size:14px;
 }
 
-/* Arrow */
+.selected-text{
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+}
 
 .dropdown-arrow{
 font-size:14px;
 }
-
-/* Dropdown */
 
 .multi-select-dropdown{
 position:absolute;
 top:100%;
 left:0;
 width:100%;
-
 background:#fff;
 border:1px solid #ddd;
 border-radius:10px;
 margin-top:6px;
-
 max-height:200px;
 overflow-y:auto;
-
 box-shadow:0 6px 18px rgba(0,0,0,0.08);
-
 z-index:1000;
 }
-
-/* Checkbox row */
 
 .dropdown-option{
 display:flex;
 align-items:center;
 gap:10px;
-
 padding:10px 14px;
 cursor:pointer;
 font-size:14px;
 }
 
-/* Hover */
-
 .dropdown-option:hover{
 background:#f5f7fb;
 }
 
-/* Checkbox */
-
 .dropdown-option input{
 width:16px;
 height:16px;
-cursor:pointer;
 }
 
-/* Prevent text wrapping */
-
-.dropdown-option span{
+.option-text{
 white-space:nowrap;
 }
