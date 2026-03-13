@@ -470,39 +470,53 @@ const CustomerForm = () => {
 
   {/* SELECTED PROPERTY TYPES */}
 
-  <div className="selected-types">
+{/* ===============================
+               PROPERTY TYPE MULTI DROPDOWN
+            =============================== */}
 
-    {data.property_types.map(typeId => {
+            <div className="multi-select-container">
 
-      const type = propertyTypes.find(t => t.type_id === typeId);
+              <div
+                className="multi-select-input"
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+              >
 
-      if (!type) return null;
+                {selectedPropertyNames || "Select Property Types"}
 
-      return (
+                <span className="dropdown-arrow">▾</span>
 
-        <div key={typeId} className="type-chip">
+              </div>
 
-          {type.type_name}
+              {dropdownOpen && (
 
-          <button
-            type="button"
-            onClick={() => removeType(typeId)}
-          >
-            ×
-          </button>
+                <div className="multi-select-dropdown">
 
-        </div>
+                  {propertyTypes.map((pt) => (
 
-      );
+                    <label key={pt.type_id} className="dropdown-option">
 
-    })}
+                      <input
+                        type="checkbox"
+                        checked={data.property_types.includes(pt.type_id)}
+                        onChange={() => togglePropertyType(pt.type_id)}
+                      />
 
-  </div>
+                      <span>{pt.type_name}</span>
+
+                    </label>
+
+                  ))}
+
+                </div>
+
+              )}
+
+            </div>
 
 
-  {/* CHECKBOX LIST */}
+ 
 
-  <div className="dropdown-types">
+  {/* <div className="dropdown-types">
 
     {propertyTypes.map(pt => (
 
@@ -522,7 +536,7 @@ const CustomerForm = () => {
 
     ))}
 
-  </div>
+  </div> */}
 
 </div>
 

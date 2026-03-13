@@ -183,81 +183,86 @@ textarea {
     padding: 10px;
   }
 }
-/* ================================
-MULTI SELECT
-================================ */
+/* ============================
+MULTI SELECT DROPDOWN
+============================ */
 
-.multi-select{
-border:1px solid #ddd;
+.multi-select-container{
+position:relative;
+width:100%;
+}
+
+/* Input box */
+
+.multi-select-input{
+width:100%;
+padding:12px 14px;
+border:1px solid #d1d5db;
 border-radius:10px;
-padding:10px;
 background:#fff;
-}
-
-/* Selected Chips */
-
-.selected-types{
-display:flex;
-flex-wrap:wrap;
-gap:6px;
-margin-bottom:10px;
-}
-
-.type-chip{
-background:#1a237e;
-color:#fff;
-padding:5px 12px;
-border-radius:20px;
-font-size:12px;
-display:flex;
-align-items:center;
-gap:6px;
-}
-
-.type-chip button{
-border:none;
-background:transparent;
-color:white;
+font-size:14px;
 cursor:pointer;
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+/* Arrow */
+
+.dropdown-arrow{
 font-size:14px;
 }
 
-/* Dropdown list */
+/* Dropdown */
 
-.dropdown-types{
-max-height:180px;
+.multi-select-dropdown{
+position:absolute;
+top:100%;
+left:0;
+width:100%;
+
+background:#fff;
+border:1px solid #ddd;
+border-radius:10px;
+margin-top:6px;
+
+max-height:200px;
 overflow-y:auto;
-border-top:1px solid #eee;
-padding-top:8px;
 
-display:flex;
-flex-direction:column;
-gap:8px;
+box-shadow:0 6px 18px rgba(0,0,0,0.08);
+
+z-index:1000;
 }
 
-/* Each row */
+/* Checkbox row */
 
-.type-option{
+.dropdown-option{
 display:flex;
 align-items:center;
 gap:10px;
-width:100%;
-padding:6px 4px;
+
+padding:10px 14px;
 cursor:pointer;
 font-size:14px;
 }
 
-/* checkbox */
+/* Hover */
 
-.type-option input{
+.dropdown-option:hover{
+background:#f5f7fb;
+}
+
+/* Checkbox */
+
+.dropdown-option input{
 width:16px;
 height:16px;
 cursor:pointer;
 }
 
-/* text */
+/* Prevent text wrapping */
 
-.type-name{
-flex:1;
+.dropdown-option span{
 white-space:nowrap;
 }
